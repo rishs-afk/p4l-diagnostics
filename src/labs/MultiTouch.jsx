@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import LabCard from '../components/LabCard';
 
 const COLORS = ['#E30613', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316', '#6366F1', '#14B8A6'];
@@ -15,9 +16,10 @@ export default function MultiTouch({ onResult }) {
     setState('testing');
     maxRef.current = 0;
     setMaxTouches(0);
+    setTouches([]);
   };
 
-  const handleTouch = useCallback((e) => {
+  const updateTouches = useCallback((e) => {
     e.preventDefault();
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -39,34 +41,60 @@ export default function MultiTouch({ onResult }) {
     }
   }, []);
 
-  const handleTouchEnd = useCallback((e) => {
+  const handleEnd = useCallback((e) => {
     e.preventDefault();
-    if (e.touches.length === 0) setTouches([]);
-    else handleTouch(e);
-  }, [handleTouch]);
+    updateTouches(e);
+  }, [updateTouches]);
 
+  // Canvas Drawing Logic
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || state !== 'testing') return;
     const ctx = canvas.getContext('2d');
-    const dpr = window.devicePixelRatio || 1;
+    
+    // Set initial size if needed
     const rect = canvas.getBoundingClientRect();
-    canvas.width = rect.width * dpr;
-    canvas.height = rect.height * dpr;
-    ctx.scale(dpr, dpr);
+    const dpr = window.devicePixelRatio || 1;
+    if (canvas.width !== rect.width * dpr) {
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
     ctx.clearRect(0, 0, rect.width, rect.height);
+    
+    // Draw grid/background for better spatial awareness
+    ctx.strokeStyle = '#f1f5f9';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < rect.width; x += 40) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, rect.height); ctx.stroke();
+    }
+    for (let y = 0; y < rect.height; y += 40) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(rect.width, y); ctx.stroke();
+    }
+
+    // Draw touches
     touches.forEach((t) => {
+      // Outer ring
       ctx.beginPath();
-      ctx.arc(t.x, t.y, 30, 0, Math.PI * 2);
-      ctx.fillStyle = t.color + '20';
+      ctx.arc(t.x, t.y, 45, 0, Math.PI * 2);
+      ctx.fillStyle = t.color + '15';
       ctx.fill();
       ctx.strokeStyle = t.color;
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 3;
       ctx.stroke();
+      
+      // Inner circle
       ctx.beginPath();
-      ctx.arc(t.x, t.y, 8, 0, Math.PI * 2);
+      ctx.arc(t.x, t.y, 12, 0, Math.PI * 2);
       ctx.fillStyle = t.color;
       ctx.fill();
+
+      // Coordinates text
+      ctx.font = 'bold 10px Inter';
+      ctx.fillStyle = t.color;
+      ctx.textAlign = 'center';
+      ctx.fillText(`ID: ${t.id}`, t.x, t.y - 55);
     });
   }, [touches, state]);
 
@@ -95,51 +123,83 @@ export default function MultiTouch({ onResult }) {
     >
       {state === 'idle' && (
         <div className="space-y-3">
-          <p className="text-xs text-charcoal-muted font-medium">Place multiple fingers on the screen to test multi-touch support.</p>
+          <p className="text-xs text-charcoal-muted font-medium">Verify multi-finger support by placing up to 10 points on the screen.</p>
           <button onClick={startTest} className="btn-primary" id="multitouch-start-btn">
             Start Multi-Touch Test
           </button>
         </div>
       )}
 
-      {state === 'testing' && (
-        <div className="space-y-3">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-semibold text-charcoal">Active: {touches.length}</span>
-            <span className="text-xs font-semibold text-p4l-red">Max: {maxTouches}</span>
-          </div>
-          <div className="section-bg relative overflow-hidden rounded-xl" style={{ height: '220px' }}>
+      {state === 'testing' && createPortal(
+        <div className="fixed inset-0 z-[100] bg-white flex flex-col">
+          <div className="relative w-full h-full touch-none select-none bg-slate-50">
             <canvas
               ref={canvasRef}
               className="absolute inset-0 w-full h-full touch-none"
-              onTouchStart={handleTouch}
-              onTouchMove={handleTouch}
-              onTouchEnd={handleTouchEnd}
-              onTouchCancel={handleTouchEnd}
+              onTouchStart={updateTouches}
+              onTouchMove={updateTouches}
+              onTouchEnd={handleEnd}
+              onTouchCancel={handleEnd}
             />
+            
+            {/* Floating Status Bar */}
+            <div className="absolute top-10 left-4 right-4 flex justify-between items-start pointer-events-none">
+              <div className="bg-charcoal/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-2xl">
+                <h2 className="text-white font-bold text-lg mb-1">Multi-Touch</h2>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Place at least 5 fingers</p>
+              </div>
+              <div className="flex gap-2">
+                <div className="bg-p4l-red p-4 rounded-2xl shadow-xl flex flex-col items-center min-w-[70px]">
+                  <span className="text-white font-black text-xl leading-none">{touches.length}</span>
+                  <span className="text-[8px] text-white/70 uppercase font-bold mt-1">Active</span>
+                </div>
+                <div className="bg-charcoal p-4 rounded-2xl shadow-xl flex flex-col items-center min-w-[70px]">
+                  <span className="text-white font-black text-xl leading-none">{maxTouches}</span>
+                  <span className="text-[8px] text-slate-400 uppercase font-bold mt-1">Max</span>
+                </div>
+              </div>
+            </div>
+
             {touches.length === 0 && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <p className="text-xs text-charcoal-muted font-medium">Touch the area with multiple fingers</p>
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none animate-pulse">
+                <div className="text-center">
+                  <div className="w-20 h-20 border-4 border-slate-200 border-dashed rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <div className="w-10 h-10 bg-slate-100 rounded-full" />
+                  </div>
+                  <p className="text-sm text-charcoal-muted font-bold tracking-tight">Touch anywhere with multiple fingers</p>
+                </div>
               </div>
             )}
+
+            {/* Bottom Controls */}
+            <div className="absolute bottom-10 left-6 right-6 flex gap-4">
+              <button 
+                onClick={() => handleResult(false)}
+                className="flex-1 py-4 bg-white text-p4l-red font-bold rounded-2xl shadow-lg border border-red-100 active:scale-95 transition-transform"
+              >
+                Failed
+              </button>
+              <button 
+                onClick={() => handleResult(true)}
+                className="flex-[2] py-4 bg-emerald-pass text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                Verified ({maxTouches} Points)
+              </button>
+            </div>
           </div>
-          <div className="flex gap-2">
-            <button onClick={() => handleResult(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="multitouch-pass-btn">
-              Working
-            </button>
-            <button onClick={() => handleResult(false)} className="flex-1 btn-secondary !bg-red-50 !text-p4l-red !border-red-200" id="multitouch-fail-btn">
-              Fail
-            </button>
-          </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {state === 'done' && result && (
         <div className={`section-bg ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass'
-              ? `✓ Multi-touch working — ${result.maxTouches} points detected`
-              : `✗ Multi-touch issue — max ${result.maxTouches} points`}
+              ? `✓ Multi-touch verified — detected up to ${result.maxTouches} points`
+              : `✗ Multi-touch failed — detected ${result.maxTouches} points`}
           </p>
         </div>
       )}
