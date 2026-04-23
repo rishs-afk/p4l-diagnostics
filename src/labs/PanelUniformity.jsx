@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LabCard from '../components/LabCard';
 
 const COLORS = [
@@ -14,9 +14,26 @@ export default function PanelUniformity({ onResult }) {
   const [colorIndex, setColorIndex] = useState(0);
   const [result, setResult] = useState(null);
 
+  useEffect(() => {
+    const meta = document.getElementById('theme-color-meta');
+    if (state === 'testing') {
+      const color = COLORS[colorIndex];
+      if (meta) meta.setAttribute('content', color.value);
+    } else {
+      if (meta) meta.setAttribute('content', '#E30613');
+    }
+  }, [state, colorIndex]);
+
   const startTest = () => {
     setState('testing');
     setColorIndex(0);
+    
+    // Request Fullscreen
+    const doc = window.document.documentElement;
+    if (doc.requestFullscreen) doc.requestFullscreen().catch(() => {});
+    else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen().catch(() => {});
+    else if (doc.mozRequestFullScreen) doc.mozRequestFullScreen().catch(() => {});
+    else if (doc.msRequestFullscreen) doc.msRequestFullscreen().catch(() => {});
   };
 
   const nextColor = () => {
@@ -24,6 +41,9 @@ export default function PanelUniformity({ onResult }) {
       setColorIndex((i) => i + 1);
     } else {
       setState('confirm');
+      // Exit Fullscreen
+      if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen().catch(() => {});
     }
   };
 
