@@ -168,10 +168,8 @@ async function parseDeviceContext() {
   const cores = navigator.hardwareConcurrency || '?';
   const memory = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'N/A';
   const screenRes = `${screen.width}×${screen.height}`;
-  const pixelRatio = `${dpr.toFixed(1)} DPR`;
-  const pixelDensityHelp = `${dpr.toFixed(1)}x means each UI pixel uses about ${Math.round(dpr)}×${Math.round(dpr)} hardware pixels.`;
 
-  return { os, modelLabel, cores, memory, screenRes, pixelRatio, pixelDensityHelp, gpu: hardware.gpu };
+  return { os, modelLabel, cores, memory, screenRes, gpu: hardware.gpu };
 }
 
 export default function DeviceContext({ onResult }) {
@@ -213,7 +211,6 @@ export default function DeviceContext({ onResult }) {
               ['Hardware', info.modelLabel],
               ['RAM', info.memory],
               ['Cores', info.cores + ' CPU'],
-              ['Pixel Density', info.pixelRatio],
             ].map(([label, value]) => (
               <div key={label}>
                 <p className="text-[10px] uppercase tracking-wider text-charcoal-muted font-bold">{label}</p>
@@ -221,7 +218,6 @@ export default function DeviceContext({ onResult }) {
               </div>
             ))}
           </div>
-          <p className="text-xs text-charcoal-muted mt-3">{info.pixelDensityHelp}</p>
         </div>
       ) : (
         <p className="text-xs text-charcoal-muted">Detecting device...</p>
