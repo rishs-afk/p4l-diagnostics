@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import LabCard from '../components/LabCard';
 
 const GRID_COLS = 5;
@@ -90,7 +91,7 @@ export default function TouchZoneMap({ onResult }) {
         </div>
       )}
 
-      {state === 'testing' && (
+      {state === 'testing' && createPortal(
         <div className="fixed inset-0 z-[100] bg-white flex flex-col p-4">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-lg font-bold text-charcoal">Touch Test</h2>
@@ -151,7 +152,8 @@ export default function TouchZoneMap({ onResult }) {
               Finish Test ({touched.size}/{TOTAL_ZONES})
             </button>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
 
       {state === 'done' && result && (
