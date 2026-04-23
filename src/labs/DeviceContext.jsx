@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import LabCard from '../components/LabCard';
 
+function toGB(bytes) {
+  return Math.round(bytes / (1024 * 1024 * 1024));
+}
+
 function getHardwareInfo() {
   const info = {
     gpu: 'Unknown GPU',
@@ -67,75 +71,117 @@ function getMacModel(width, height, chip) {
   return chip ? `${base} (${chip})` : base;
 }
 
-function parseUserAgent() {
-  const ua = navigator.userAgent;
-  const hardware = getHardwareInfo();
-  let os = 'Unknown OS';
-  const dpr = window.devicePixelRatio || 1;
-  const w = Math.round(screen.width * dpr);
-  const h = Math.round(screen.height * dpr);
+async function getClientHints() {
+  if (!navigator.userAgentData?.getHighEntropyValues) return {};
+  try {
+    return await navigator.userAgentData.getHighEntropyValues(['model', 'platform', 'platformVersion']);
+  } catch (e) {
+    return {};
+  }
+}
 
-  // OS detection
-  const isIOS = /iPad|iPhone|iPod/.test(ua);
+function detectOS(ua, hints) {
+  let os = 'Unknown OS';
+
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || hints.platform === 'iOS';
   if (isIOS) {
     os = 'iOS';
     const match = ua.match(/OS (\d+[_\.]\d+)/);
-    if (match) os += ' ' + match[1].replace('_', '.');
+    if (match) os += ' ' + match[1].replace(/_/g, '.');
   } else if (/Android/.test(ua)) {
     os = 'Android';
     const match = ua.match(/Android (\d+\.?\d*)/);
     if (match) os += ' ' + match[1];
-  } else if (/Mac OS X/.test(ua)) {
+  } else if (/Mac OS X|Macintosh/.test(ua) || hints.platform === 'macOS') {
     os = 'macOS';
-    const match = ua.match(/Mac OS X (\d+[_\.]\d+)/);
-    if (match) os += ' ' + match[1].replace(/_/g, '.');
-  } else if (/Windows/.test(ua)) {
+  } else if (/Windows/.test(ua) || hints.platform === 'Windows') {
     os = 'Windows';
-    const match = ua.match(/Windows NT (\d+\.\d+)/);
-    if (match) os += ' ' + match[1];
+  } else if (/Linux/.test(ua) || hints.platform === 'Linux') {
+    os = 'Linux';
   }
 
-  // Model Label improvement
+  return os;
+}
+
+function detectModel(ua, hints, hardware, width, height) {
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || hints.platform === 'iOS';
+  const isMacLike = /Macintosh/.test(ua) || navigator.platform === 'MacIntel' || hints.platform === 'macOS';
+
   let modelLabel = navigator.platform || 'Unknown';
   if (isIOS && /iPhone/.test(ua)) {
-    modelLabel = getIPhoneModel(w, h);
-  } else if (modelLabel === 'MacIntel' || modelLabel === 'Macintosh') {
+    modelLabel = getIPhoneModel(width, height);
+  } else if (hints.model && hints.model !== 'Unknown') {
+    modelLabel = hints.model;
+  } else if (isMacLike) {
     if (hardware.chip) {
-      modelLabel = getMacModel(w, h, hardware.chip);
+      modelLabel = getMacModel(width, height, hardware.chip);
     } else if (navigator.maxTouchPoints > 0) {
       modelLabel = 'iPad (iPadOS)';
     } else {
-      modelLabel = 'Mac (Intel/Apple)';
+      modelLabel = 'Mac (model unavailable in browser)';
     }
   }
+
+  return modelLabel;
+}
+
+async function parseDeviceContext() {
+  const ua = navigator.userAgent;
+  const hints = await getClientHints();
+  const hardware = getHardwareInfo();
+  const dpr = window.devicePixelRatio || 1;
+  const w = Math.round(screen.width * dpr);
+  const h = Math.round(screen.height * dpr);
+  const os = detectOS(ua, hints);
+  const modelLabel = detectModel(ua, hints, hardware, w, h);
 
   const cores = navigator.hardwareConcurrency || '?';
   const memory = navigator.deviceMemory ? navigator.deviceMemory + ' GB' : 'N/A';
   const screenRes = `${screen.width}×${screen.height}`;
-  const pixelRatio = window.devicePixelRatio?.toFixed(1) || '1.0';
+  const pixelRatio = `${dpr.toFixed(1)} DPR`;
+  const pixelDensityHelp = `${dpr.toFixed(1)}x means each UI pixel uses about ${Math.round(dpr)}×${Math.round(dpr)} hardware pixels.`;
 
-  return { os, modelLabel, cores, memory, screenRes, pixelRatio, gpu: hardware.gpu };
+  return { os, modelLabel, cores, memory, screenRes, pixelRatio, pixelDensityHelp, gpu: hardware.gpu };
 }
 
 export default function DeviceContext({ onResult }) {
   const [info, setInfo] = useState(null);
-  const [storage, setStorage] = useState(null);
+  const [storage, setStorage] = useState('Estimating...');
 
   useEffect(() => {
-    const data = parseUserAgent();
-    
-    // Attempt to get storage info
-    if (navigator.storage && navigator.storage.estimate) {
-      navigator.storage.estimate().then(estimate => {
-        const totalGB = estimate.quota ? Math.round(estimate.quota / (1024 * 1024 * 1024)) : null;
-        setStorage(totalGB ? `${totalGB} GB Total` : 'N/A');
-        onResult({ status: 'pass', data: { ...data, storage: totalGB } });
-      });
-    } else {
-      onResult({ status: 'pass', data });
-    }
-    
-    setInfo(data);
+    let mounted = true;
+
+    const load = async () => {
+      const data = await parseDeviceContext();
+      if (!mounted) return;
+
+      if (navigator.storage && navigator.storage.estimate) {
+        try {
+          const estimate = await navigator.storage.estimate();
+          const quotaGB = estimate.quota ? toGB(estimate.quota) : null;
+          const usedGB = estimate.usage ? toGB(estimate.usage) : null;
+          const storageLabel = quotaGB
+            ? `${usedGB ?? 0} / ${quotaGB} GB Browser Quota`
+            : 'Browser quota unavailable';
+          setStorage(storageLabel);
+          onResult({ status: 'pass', data: { ...data, storageQuotaGB: quotaGB, storageUsageGB: usedGB } });
+        } catch (e) {
+          setStorage('Browser quota unavailable');
+          onResult({ status: 'pass', data });
+        }
+      } else {
+        setStorage('Browser quota unavailable');
+        onResult({ status: 'pass', data });
+      }
+
+      setInfo(data);
+    };
+
+    load();
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const Icon = () => (
@@ -154,9 +200,9 @@ export default function DeviceContext({ onResult }) {
               ['OS', info.os],
               ['Hardware', info.modelLabel],
               ['RAM', info.memory],
-              ['Storage', storage || 'Estimating...'],
+              ['Browser Storage', storage],
               ['Cores', info.cores + ' CPU'],
-              ['Pixel Density', info.pixelRatio + 'x'],
+              ['Pixel Density', info.pixelRatio],
             ].map(([label, value]) => (
               <div key={label}>
                 <p className="text-[10px] uppercase tracking-wider text-charcoal-muted font-bold">{label}</p>
@@ -164,6 +210,7 @@ export default function DeviceContext({ onResult }) {
               </div>
             ))}
           </div>
+          <p className="text-xs text-charcoal-muted mt-3">{info.pixelDensityHelp}</p>
         </div>
       ) : (
         <p className="text-xs text-charcoal-muted">Detecting device...</p>
