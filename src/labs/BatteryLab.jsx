@@ -59,10 +59,17 @@ export default function BatteryLab({ onResult }) {
     ? battery.level > 50 ? 'bg-emerald-pass' : battery.level > 20 ? 'bg-amber-500' : 'bg-p4l-red'
     : 'bg-slate-200';
 
+  const Icon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="1" y="6" width="18" height="12" rx="2" ry="2"></rect>
+      <line x1="23" y1="13" x2="23" y2="11"></line>
+    </svg>
+  );
+
   return (
     <LabCard
       title="Battery Status"
-      icon="🔋"
+      icon={<Icon />}
       status={!supported ? 'unsupported' : battery ? 'pass' : 'running'}
       id="lab-battery"
     >

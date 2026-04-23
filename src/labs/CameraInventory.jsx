@@ -5,26 +5,38 @@ function classifyCamera(device, allDevices) {
   const label = (device.label || '').toLowerCase();
   const groupDevices = allDevices.filter((d) => d.groupId === device.groupId && d.kind === 'videoinput');
 
-  // Check facing mode from label
+  const icons = {
+    selfie: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+        <circle cx="9" cy="7" r="4"></circle>
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+      </svg>
+    ),
+    rear: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+        <circle cx="12" cy="13" r="4"></circle>
+      </svg>
+    ),
+    tele: (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="11" cy="11" r="8"></circle>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+      </svg>
+    ),
+  };
+
   if (label.includes('front') || label.includes('selfie') || label.includes('facetime') || label.includes('user'))
-    return { name: 'Selfie Camera', icon: '🤳' };
+    return { name: 'Selfie Camera', icon: icons.selfie };
   if (label.includes('ultra') || label.includes('wide'))
-    return { name: 'Ultra-Wide Camera', icon: '🔭' };
+    return { name: 'Ultra-Wide Camera', icon: icons.rear };
   if (label.includes('tele'))
-    return { name: 'Telephoto Camera', icon: '🔍' };
+    return { name: 'Telephoto Camera', icon: icons.tele };
   if (label.includes('back') || label.includes('rear') || label.includes('environment'))
-    return { name: 'Primary Rear Camera', icon: '📸' };
-  if (label.includes('ir') || label.includes('infrared'))
-    return { name: 'IR Camera', icon: '👁️' };
+    return { name: 'Primary Rear Camera', icon: icons.rear };
 
-  // Fallback: if group has multiple, guess by index
-  if (groupDevices.length > 1) {
-    const idx = groupDevices.indexOf(device);
-    if (idx === 0) return { name: 'Primary Camera', icon: '📸' };
-    return { name: `Camera ${idx + 1}`, icon: '📷' };
-  }
-
-  return { name: device.label || 'Camera', icon: '📷' };
+  return { name: device.label || 'Camera', icon: icons.rear };
 }
 
 export default function CameraInventory({ onResult }) {
@@ -70,10 +82,17 @@ export default function CameraInventory({ onResult }) {
     return () => { cancelled = true; };
   }, []);
 
+  const MainIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+      <circle cx="12" cy="13" r="4"></circle>
+    </svg>
+  );
+
   return (
     <LabCard
       title="Camera Inventory"
-      icon="📷"
+      icon={<MainIcon />}
       status={error ? 'fail' : cameras ? 'pass' : 'running'}
       id="lab-camera-inventory"
     >
@@ -81,17 +100,17 @@ export default function CameraInventory({ onResult }) {
         <div className="space-y-2">
           {cameras.map((cam, i) => (
             <div key={cam.id || i} className="section-bg flex items-center gap-3">
-              <span className="text-xl">{cam.icon}</span>
+              <span className="text-p4l-red">{cam.icon}</span>
               <div>
-                <p className="text-sm font-medium text-charcoal">{cam.name}</p>
+                <p className="text-sm font-semibold text-charcoal">{cam.name}</p>
                 {cam.rawLabel && cam.rawLabel !== cam.name && (
-                  <p className="text-[10px] text-charcoal-muted truncate max-w-[200px]">{cam.rawLabel}</p>
+                  <p className="text-[10px] text-charcoal-muted truncate max-w-[200px] font-medium">{cam.rawLabel}</p>
                 )}
               </div>
             </div>
           ))}
-          <p className="text-xs text-charcoal-muted mt-2">
-            {cameras.length} camera{cameras.length !== 1 ? 's' : ''} detected
+          <p className="text-[11px] text-charcoal-muted mt-2 font-medium">
+            {cameras.length} lens module{cameras.length !== 1 ? 's' : ''} identified
           </p>
         </div>
       ) : error ? (

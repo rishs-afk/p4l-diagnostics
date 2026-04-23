@@ -27,8 +27,6 @@ export default function FlashlightToggle({ onResult }) {
       });
       streamRef.current = stream;
       const track = stream.getVideoTracks()[0];
-
-      // Check if torch is supported
       const capabilities = track.getCapabilities?.();
       if (!capabilities || !capabilities.torch) {
         track.stop();
@@ -36,7 +34,6 @@ export default function FlashlightToggle({ onResult }) {
         setState('unsupported');
         return;
       }
-
       trackRef.current = track;
       setState('ready');
     } catch {
@@ -53,9 +50,7 @@ export default function FlashlightToggle({ onResult }) {
         advanced: [{ torch: newState }],
       });
       setTorchOn(newState);
-    } catch {
-      // Torch toggle failed
-    }
+    } catch {}
   };
 
   const handleResult = (pass) => {
@@ -72,26 +67,27 @@ export default function FlashlightToggle({ onResult }) {
     onResult(r);
   };
 
+  const Icon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1.3.5 2.6 1.5 3.5.8.8 1.3 1.5 1.5 2.5"></path>
+      <line x1="9" y1="18" x2="15" y2="18"></line>
+      <line x1="10" y1="22" x2="14" y2="22"></line>
+    </svg>
+  );
+
   return (
     <LabCard
       title="Flashlight / Torch"
-      icon="🔦"
+      icon={<Icon />}
       status={result ? result.status : state === 'ready' ? 'running' : 'pending'}
       id="lab-flashlight"
     >
       {state === 'idle' && (
         <div className="space-y-3">
-          <p className="text-xs text-charcoal-muted">Test your device's LED flash by toggling the torch.</p>
+          <p className="text-xs text-charcoal-muted font-medium">Test your device's LED flash by toggling the torch.</p>
           <button onClick={initTorch} className="btn-primary" id="flashlight-init-btn">
-            🔦 Initialize Torch
+            Initialize Torch
           </button>
-        </div>
-      )}
-
-      {state === 'loading' && (
-        <div className="flex items-center gap-2">
-          <div className="w-3 h-3 rounded-full bg-p4l-red animate-pulse" />
-          <p className="text-xs text-charcoal-muted">Accessing camera for torch control...</p>
         </div>
       )}
 
@@ -106,17 +102,16 @@ export default function FlashlightToggle({ onResult }) {
             }`}
             id="flashlight-toggle-btn"
           >
-            <div className="text-3xl mb-1">{torchOn ? '💡' : '🔦'}</div>
-            <p className="text-sm font-semibold">{torchOn ? 'Torch ON' : 'Torch OFF'}</p>
-            <p className="text-xs text-charcoal-muted mt-0.5">Tap to toggle</p>
+            <p className="text-sm font-bold uppercase tracking-widest">{torchOn ? 'ON' : 'OFF'}</p>
+            <p className="text-xs text-charcoal-muted mt-1 font-medium">Tap to toggle LED</p>
           </button>
 
           <div className="flex gap-2">
             <button onClick={() => handleResult(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="flashlight-pass-btn">
-              ✓ Working
+              Working
             </button>
             <button onClick={() => handleResult(false)} className="flex-1 btn-secondary !bg-red-50 !text-p4l-red !border-red-200" id="flashlight-fail-btn">
-              ✗ Not Working
+              Fail
             </button>
           </div>
         </div>
@@ -125,12 +120,12 @@ export default function FlashlightToggle({ onResult }) {
       {state === 'unsupported' && !result && (
         <div className="space-y-3">
           <div className="section-bg">
-            <p className="text-xs text-charcoal-muted">
-              Torch control is not supported on this device/browser. This is common on iOS Safari and some desktop browsers.
+            <p className="text-xs text-charcoal-muted font-medium">
+              Torch control is not supported on this device/browser.
             </p>
           </div>
           <button onClick={handleSkip} className="btn-secondary" id="flashlight-skip-btn">
-            Skip This Test
+            Skip Test
           </button>
         </div>
       )}
@@ -138,7 +133,7 @@ export default function FlashlightToggle({ onResult }) {
       {result && (
         <div className={`section-bg ${result.status === 'pass' ? '!bg-emerald-50' : result.status === 'fail' ? '!bg-red-50' : ''}`}>
           <p className="text-sm font-medium">
-            {result.status === 'pass' ? '✓ Flashlight working' : result.status === 'fail' ? '✗ Flashlight issue' : '— Torch not available on this device'}
+            {result.status === 'pass' ? '✓ Flashlight working' : result.status === 'fail' ? '✗ Flashlight issue' : '— Torch not available'}
           </p>
         </div>
       )}

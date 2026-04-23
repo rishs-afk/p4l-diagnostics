@@ -87,16 +87,19 @@ export default function App() {
         <div className="max-w-lg mx-auto px-4 pt-3 pb-2">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-p4l-red rounded-lg flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <div className="w-8 h-8 bg-p4l-red rounded-lg flex items-center justify-center shadow-sm">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
               </div>
-              <span className="font-bold text-sm text-charcoal tracking-tight">P4L Diagnostics</span>
+              <span className="font-bold text-sm text-charcoal tracking-tight uppercase">P4L Diagnostic Lab</span>
             </div>
-            <span className="text-xs text-charcoal-muted font-medium">
-              {step === 'scan' ? 'Scanning...' : step === 'verify' ? 'Verifying...' : 'Complete'}
-            </span>
+            <div className="flex items-center gap-1.5">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-pass animate-pulse"></div>
+              <span className="text-[10px] text-charcoal-muted font-bold uppercase tracking-wider">
+                {step === 'scan' ? 'Analyzing' : step === 'verify' ? 'Verifying' : 'Complete'}
+              </span>
+            </div>
           </div>
           <Stepper currentStep={step} steps={STEPS} />
         </div>

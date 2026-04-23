@@ -124,18 +124,40 @@ export default function AudioSpectrum({ onResult }) {
     setState('done');
   };
 
+  const Icon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+      <line x1="12" y1="19" x2="12" y2="23"></line>
+      <line x1="8" y1="23" x2="16" y2="23"></line>
+    </svg>
+  );
+
+  const SuccessIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="20 6 9 17 4 12"></polyline>
+    </svg>
+  );
+
+  const FailIcon = () => (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="18" y1="6" x2="6" y2="18"></line>
+      <line x1="6" y1="6" x2="18" y2="18"></line>
+    </svg>
+  );
+
   return (
     <LabCard
       title="Microphone Test"
-      icon="🎤"
+      icon={<Icon />}
       status={result ? result.status : state === 'listening' ? 'running' : 'pending'}
       id="lab-audio-spectrum"
     >
       {state === 'idle' && (
         <div className="space-y-3">
-          <p className="text-xs text-charcoal-muted">Speak or play audio to test your microphone input.</p>
+          <p className="text-xs text-charcoal-muted font-medium">Speak or play audio to test your microphone input.</p>
           <button onClick={startListening} className="btn-primary" id="audio-start-btn">
-            🎤 Start Microphone Test
+            Start Microphone Test
           </button>
         </div>
       )}
