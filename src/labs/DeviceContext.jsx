@@ -176,7 +176,6 @@ async function parseDeviceContext() {
 
 export default function DeviceContext({ onResult }) {
   const [info, setInfo] = useState(null);
-  const [storage, setStorage] = useState('Checking...');
 
   useEffect(() => {
     let mounted = true;
@@ -185,8 +184,7 @@ export default function DeviceContext({ onResult }) {
       const data = await parseDeviceContext();
       if (!mounted) return;
 
-      setStorage('Unavailable in browser (privacy restriction)');
-      onResult({ status: 'pass', data: { ...data, systemStorageTotal: null } });
+      onResult({ status: 'pass', data });
 
       setInfo(data);
     };
@@ -214,7 +212,6 @@ export default function DeviceContext({ onResult }) {
               ['OS', info.os],
               ['Hardware', info.modelLabel],
               ['RAM', info.memory],
-              ['System Storage', storage],
               ['Cores', info.cores + ' CPU'],
               ['Pixel Density', info.pixelRatio],
             ].map(([label, value]) => (
