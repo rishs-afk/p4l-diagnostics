@@ -146,7 +146,7 @@ export default function MultiTouch({ onResult }) {
             <div className="absolute top-10 left-4 right-4 flex justify-between items-start pointer-events-none">
               <div className="bg-charcoal/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-2xl">
                 <h2 className="text-white font-bold text-lg mb-1">Multi-Touch</h2>
-                <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Place at least 5 fingers</p>
+                <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Touch with multiple fingers</p>
               </div>
               <div className="flex gap-2">
                 <div className="bg-p4l-red p-4 rounded-2xl shadow-xl flex flex-col items-center min-w-[70px]">
@@ -172,15 +172,15 @@ export default function MultiTouch({ onResult }) {
             )}
 
             {/* Bottom Controls */}
-            <div className="absolute bottom-10 left-6 right-6 flex gap-4">
+            <div className="absolute bottom-10 left-6 right-6 flex gap-4 z-50">
               <button 
-                onClick={() => handleResult(false)}
+                onPointerDown={(e) => { e.stopPropagation(); handleResult(false); }}
                 className="flex-1 py-4 bg-white text-p4l-red font-bold rounded-2xl shadow-lg border border-red-100 active:scale-95 transition-transform"
               >
                 Failed
               </button>
               <button 
-                onClick={() => handleResult(true)}
+                onPointerDown={(e) => { e.stopPropagation(); handleResult(true); }}
                 className="flex-[2] py-4 bg-emerald-pass text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
