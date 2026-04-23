@@ -131,7 +131,7 @@ export default function MultiTouch({ onResult }) {
       )}
 
       {state === 'testing' && createPortal(
-        <div className="fixed inset-0 z-[100] bg-white flex flex-col">
+        <div className="fixed inset-0 z-[100] bg-white flex flex-col" style={{ height: '100dvh' }}>
           <div className="relative w-full h-full touch-none select-none bg-slate-50">
             <canvas
               ref={canvasRef}
@@ -168,7 +168,7 @@ export default function MultiTouch({ onResult }) {
             )}
 
             {/* Bottom Controls */}
-            <div className="absolute bottom-10 left-6 right-6 flex gap-4 z-[200]">
+            <div className="absolute bottom-16 left-6 right-6 flex gap-4 z-[200]">
               <button 
                 onClick={(e) => { e.stopPropagation(); handleResult(false); }}
                 onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); handleResult(false); }}

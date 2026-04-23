@@ -102,7 +102,7 @@ export default function HealthCertificate({ results, onRestart }) {
     const details = labs.map((lab) => {
       const res = results[lab.id];
       const status = res?.status || 'skipped';
-      return { ...lab, status, icon: icons[lab.id] };
+      return { ...lab, status, result: res, icon: icons[lab.id] };
     });
 
     const passed = details.filter((d) => d.status === 'pass').length;
@@ -111,6 +111,21 @@ export default function HealthCertificate({ results, onRestart }) {
 
     return { score: calculatedScore, totalLabs: total, passedLabs: passed, details };
   }, [results]);
+
+  const renderDetailText = (labId, result) => {
+    if (!result || result.status === 'skipped' || result.status === 'unsupported') return null;
+    switch (labId) {
+      case 'deviceContext': return <div className="text-[10px] text-slate-500 mt-0.5">{result.model || 'Unknown Device'} • {result.os || 'Unknown OS'}</div>;
+      case 'cameras': 
+        if (result.devices) return <div className="text-[10px] text-slate-500 mt-0.5">{result.devices.filter(d=>d.verified).length} verified lens(es)</div>;
+        return <div className="text-[10px] text-slate-500 mt-0.5">{result.count} detected</div>;
+      case 'battery': return <div className="text-[10px] text-slate-500 mt-0.5">{result.level ? Math.round(result.level * 100) + '%' : 'Unknown Level'} • {result.charging ? 'Charging' : 'Unplugged'}</div>;
+      case 'refreshRate': return <div className="text-[10px] text-slate-500 mt-0.5">{result.hz || result.label}</div>;
+      case 'touchZone': return <div className="text-[10px] text-slate-500 mt-0.5">{result.coverage ? `${result.coverage}% Coverage` : 'Verified'}</div>;
+      case 'multiTouch': return <div className="text-[10px] text-slate-500 mt-0.5">{result.maxTouches ? `${result.maxTouches} Points Detected` : 'Verified'}</div>;
+      default: return null;
+    }
+  };
 
   const exportPDF = async () => {
     if (!certificateRef.current) return;
@@ -185,12 +200,15 @@ export default function HealthCertificate({ results, onRestart }) {
           </div>
 
           <h3 className="text-xs font-bold text-charcoal-muted uppercase tracking-widest mb-4">Detailed Report</h3>
-          <div className={`space-y-2 ${isExporting ? '' : 'max-h-[300px] overflow-y-auto pr-2 custom-scrollbar'}`}>
+          <div className="space-y-2">
             {details.map((lab) => (
-              <div key={lab.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 hover:bg-slate-50 transition-colors">
+              <div key={lab.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/50">
                 <div className="flex items-center gap-3">
                   <span className="text-p4l-red">{lab.icon}</span>
-                  <span className="text-sm font-semibold text-charcoal">{lab.label}</span>
+                  <div>
+                    <span className="text-sm font-semibold text-charcoal">{lab.label}</span>
+                    {renderDetailText(lab.id, lab.result)}
+                  </div>
                 </div>
                 <div>
                   {lab.status === 'pass' ? (
@@ -216,7 +234,7 @@ export default function HealthCertificate({ results, onRestart }) {
           <button 
             onClick={exportPDF} 
             disabled={isExporting}
-            className="w-full py-4 mb-3 bg-charcoal text-white font-bold rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-4 bg-charcoal text-white font-bold rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
           >
             {isExporting ? (
               <>
@@ -236,13 +254,6 @@ export default function HealthCertificate({ results, onRestart }) {
                 Download Health Certificate
               </>
             )}
-          </button>
-          
-          <button className="btn-primary mb-3 shadow-lg shadow-p4l-red/20" onClick={() => window.open('https://protect4less.com/buy', '_blank')}>
-            Protect This Device
-          </button>
-          <button onClick={onRestart} className="btn-secondary">
-            Run New Diagnostic
           </button>
         </div>
       </div>

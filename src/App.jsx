@@ -46,9 +46,17 @@ export default function App() {
   const [step, setStep] = useState('preflight');
   const [results, dispatch] = useReducer(resultsReducer, initialResults);
   const [permissions, setPermissions] = useState({ camera: null, mic: null });
+  const [resetKeys, setResetKeys] = useState({
+    haptic: 0, audio: 0, orientation: 0, flashlight: 0, touchZone: 0, multiTouch: 0, panelUniformity: 0
+  });
 
   const setResult = useCallback((lab, result) => {
     dispatch({ type: 'SET_RESULT', lab, result });
+  }, []);
+
+  const handleRedo = useCallback((lab) => {
+    dispatch({ type: 'SET_RESULT', lab, result: null });
+    setResetKeys((prev) => ({ ...prev, [lab]: prev[lab] + 1 }));
   }, []);
 
   const handlePermissionsGranted = useCallback((perms) => {
@@ -67,6 +75,9 @@ export default function App() {
   const handleRestart = useCallback(() => {
     dispatch({ type: 'RESET' });
     setStep('preflight');
+    setResetKeys({
+      haptic: 0, audio: 0, orientation: 0, flashlight: 0, touchZone: 0, multiTouch: 0, panelUniformity: 0
+    });
   }, []);
 
   // Count completed scans
@@ -137,13 +148,13 @@ export default function App() {
               <p className="text-sm text-charcoal-muted mt-1">Test each component to verify functionality.</p>
             </div>
 
-            <HapticTest onResult={(r) => setResult('haptic', r)} />
-            <AudioSpectrum onResult={(r) => setResult('audio', r)} />
-            <OrientationLab onResult={(r) => setResult('orientation', r)} />
-            <FlashlightToggle onResult={(r) => setResult('flashlight', r)} />
-            <TouchZoneMap onResult={(r) => setResult('touchZone', r)} />
-            <MultiTouch onResult={(r) => setResult('multiTouch', r)} />
-            <PanelUniformity onResult={(r) => setResult('panelUniformity', r)} />
+            <HapticTest key={`haptic-${resetKeys.haptic}`} onResult={(r) => setResult('haptic', r)} onRedo={() => handleRedo('haptic')} />
+            <AudioSpectrum key={`audio-${resetKeys.audio}`} onResult={(r) => setResult('audio', r)} onRedo={() => handleRedo('audio')} />
+            <OrientationLab key={`orientation-${resetKeys.orientation}`} onResult={(r) => setResult('orientation', r)} onRedo={() => handleRedo('orientation')} />
+            <FlashlightToggle key={`flashlight-${resetKeys.flashlight}`} onResult={(r) => setResult('flashlight', r)} onRedo={() => handleRedo('flashlight')} />
+            <TouchZoneMap key={`touchZone-${resetKeys.touchZone}`} onResult={(r) => setResult('touchZone', r)} onRedo={() => handleRedo('touchZone')} />
+            <MultiTouch key={`multiTouch-${resetKeys.multiTouch}`} onResult={(r) => setResult('multiTouch', r)} onRedo={() => handleRedo('multiTouch')} />
+            <PanelUniformity key={`panelUniformity-${resetKeys.panelUniformity}`} onResult={(r) => setResult('panelUniformity', r)} onRedo={() => handleRedo('panelUniformity')} />
 
             {verifyComplete && (
               <div className="pt-4 animate-fade-in">
