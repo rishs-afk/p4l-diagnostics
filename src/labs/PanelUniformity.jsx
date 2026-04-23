@@ -19,9 +19,15 @@ export default function PanelUniformity({ onResult }) {
     if (state === 'testing') {
       const color = COLORS[colorIndex];
       if (meta) meta.setAttribute('content', color.value);
+      document.body.style.overflow = 'hidden';
+      window.scrollTo(0, 1);
     } else {
       if (meta) meta.setAttribute('content', '#E30613');
+      document.body.style.overflow = '';
     }
+    return () => {
+      document.body.style.overflow = '';
+    };
   }, [state, colorIndex]);
 
   const startTest = () => {
@@ -67,7 +73,7 @@ export default function PanelUniformity({ onResult }) {
     const isLight = color.name === 'White' || color.name === 'Red' || color.name === 'Green';
     return (
       <div
-        className="fixed inset-0 z-[100] flex flex-col items-center justify-end pb-12 cursor-pointer select-none"
+        className="fixed -inset-x-0 -inset-y-24 z-[100] flex flex-col items-center justify-end pb-32 cursor-pointer select-none"
         style={{ backgroundColor: color.value }}
         onClick={nextColor}
         id="panel-color-overlay"
