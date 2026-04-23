@@ -144,9 +144,8 @@ export default function MultiTouch({ onResult }) {
             
             {/* Floating Status Bar */}
             <div className="absolute top-10 left-4 right-4 flex justify-between items-start pointer-events-none">
-              <div className="bg-charcoal/90 backdrop-blur-md p-4 rounded-2xl border border-white/10 shadow-2xl">
-                <h2 className="text-white font-bold text-lg mb-1">Multi-Touch</h2>
-                <p className="text-[10px] text-slate-400 uppercase tracking-widest font-bold">Touch with multiple fingers</p>
+              <div className="bg-charcoal/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-2xl flex items-center">
+                <h2 className="text-white font-bold text-lg">Multi-Touch</h2>
               </div>
               <div className="flex gap-2">
                 <div className="bg-p4l-red p-4 rounded-2xl shadow-xl flex flex-col items-center min-w-[70px]">
@@ -162,12 +161,9 @@ export default function MultiTouch({ onResult }) {
 
             {touches.length === 0 && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none animate-pulse">
-                <div className="text-center">
-                  <div className="w-20 h-20 border-4 border-slate-200 border-dashed rounded-full mx-auto mb-4 flex items-center justify-center">
+                  <div className="w-20 h-20 border-4 border-slate-200 border-dashed rounded-full mx-auto flex items-center justify-center">
                     <div className="w-10 h-10 bg-slate-100 rounded-full" />
                   </div>
-                  <p className="text-sm text-charcoal-muted font-bold tracking-tight">Touch anywhere with multiple fingers</p>
-                </div>
               </div>
             )}
 
