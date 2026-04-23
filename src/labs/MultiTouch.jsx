@@ -168,15 +168,17 @@ export default function MultiTouch({ onResult }) {
             )}
 
             {/* Bottom Controls */}
-            <div className="absolute bottom-10 left-6 right-6 flex gap-4 z-50">
+            <div className="absolute bottom-10 left-6 right-6 flex gap-4 z-[200]">
               <button 
-                onPointerDown={(e) => { e.stopPropagation(); handleResult(false); }}
+                onClick={(e) => { e.stopPropagation(); handleResult(false); }}
+                onTouchStart={(e) => e.stopPropagation()}
                 className="flex-1 py-4 bg-white text-p4l-red font-bold rounded-2xl shadow-lg border border-red-100 active:scale-95 transition-transform"
               >
                 Failed
               </button>
               <button 
-                onPointerDown={(e) => { e.stopPropagation(); handleResult(true); }}
+                onClick={(e) => { e.stopPropagation(); handleResult(true); }}
+                onTouchStart={(e) => e.stopPropagation()}
                 className="flex-[2] py-4 bg-emerald-pass text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
