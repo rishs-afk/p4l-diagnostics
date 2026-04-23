@@ -53,8 +53,8 @@ export default function OrientationLab({ onResult }) {
     const handler = (event) => {
       const gamma = event.gamma || 0;
       const beta = event.beta || 0;
-      const x = Math.min(100, Math.max(0, 50 + (gamma / 45) * 50));
-      const y = Math.min(100, Math.max(0, 50 + ((beta - 45) / 45) * 50));
+      const x = Math.min(100, Math.max(0, 50 + (gamma / 90) * 50));
+      const y = Math.min(100, Math.max(0, 50 + (beta / 90) * 50));
       setPosition({ x, y });
       const dx = x - TARGET.x;
       const dy = y - TARGET.y;
