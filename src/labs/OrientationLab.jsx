@@ -183,8 +183,8 @@ export default function OrientationLab({ onResult }) {
 
             {/* Tilt Dot */}
             <div
-              className={`absolute w-6 h-6 rounded-full shadow-lg transition-all duration-75 ${
-                inTarget ? 'bg-emerald-pass scale-125' : 'bg-p4l-red'
+              className={`absolute w-6 h-6 rounded-full shadow-lg transition-colors duration-200 ${
+                inTarget ? 'bg-emerald-pass scale-110' : 'bg-p4l-red'
               }`}
               style={{
                 left: `${position.x}%`,
