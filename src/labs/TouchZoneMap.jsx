@@ -141,7 +141,7 @@ export default function TouchZoneMap({ onResult }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass'
               ? `✓ All touch zones responsive (${result.zonesHit}/${result.total})`

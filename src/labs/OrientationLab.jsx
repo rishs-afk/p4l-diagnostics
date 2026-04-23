@@ -205,7 +205,7 @@ export default function OrientationLab({ onResult }) {
              </p>
           </div>
 
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button onClick={() => handleSkip(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="orientation-pass-btn">
               Working
             </button>
@@ -217,7 +217,7 @@ export default function OrientationLab({ onResult }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass' ? '✓ Gyroscope responding correctly' : '✗ Orientation sensor issue'}
           </p>

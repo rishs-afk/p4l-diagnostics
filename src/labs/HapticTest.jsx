@@ -20,6 +20,7 @@ export default function HapticTest({ onResult }) {
     const r = { status: pass ? 'pass' : 'fail', supported };
     setResult(r);
     onResult(r);
+    setState('done');
   };
 
   const Icon = () => (
@@ -36,7 +37,7 @@ export default function HapticTest({ onResult }) {
       status={result ? result.status : 'pending'}
       id="lab-haptic"
     >
-      {!result ? (
+      {state !== 'done' && (
         <div className="space-y-3">
           {!supported && (
             <div className="text-xs text-amber-600 bg-amber-50 p-2.5 rounded-xl">
@@ -60,8 +61,7 @@ export default function HapticTest({ onResult }) {
             </span>
           </button>
 
-          {tested && (
-            <div className="flex gap-2 animate-fade-in">
+            <div className="flex gap-3 animate-fade-in">
               <button onClick={() => handleResult(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="haptic-pass-btn">
                 ✓ Felt It
               </button>
@@ -69,10 +69,9 @@ export default function HapticTest({ onResult }) {
                 ✗ Nothing
               </button>
             </div>
-          )}
         </div>
-      ) : (
-        <div className={`section-bg ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
+      {state === 'done' && result && (
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass' ? '✓ Vibration motor working' : '✗ Vibration not detected'}
           </p>

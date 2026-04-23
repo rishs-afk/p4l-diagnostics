@@ -174,7 +174,7 @@ export default function AudioSpectrum({ onResult }) {
           <p className="text-xs text-charcoal-muted text-center">
             {hasSignal ? '✓ Audio signal detected — speak to see the spectrum' : 'Listening... speak into your microphone'}
           </p>
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button onClick={() => handleResult(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="audio-pass-btn">
               ✓ Working
             </button>
@@ -186,7 +186,7 @@ export default function AudioSpectrum({ onResult }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass' ? '✓ Microphone working correctly' : '✗ Microphone issue detected'}
           </p>

@@ -58,6 +58,7 @@ export default function FlashlightToggle({ onResult }) {
     const r = { status: pass ? 'pass' : 'fail', supported };
     setResult(r);
     onResult(r);
+    setState('done');
   };
 
   const handleSkip = () => {
@@ -65,6 +66,7 @@ export default function FlashlightToggle({ onResult }) {
     const r = { status: 'unsupported', reason: 'Torch not available' };
     setResult(r);
     onResult(r);
+    setState('done');
   };
 
   const Icon = () => (
@@ -79,7 +81,7 @@ export default function FlashlightToggle({ onResult }) {
     <LabCard
       title="Flashlight / Torch"
       icon={<Icon />}
-      status={result ? result.status : state === 'ready' ? 'running' : 'pending'}
+      status={result ? result.status : state === 'ready' || state === 'loading' ? 'running' : 'pending'}
       id="lab-flashlight"
     >
       {state === 'idle' && (
@@ -106,7 +108,7 @@ export default function FlashlightToggle({ onResult }) {
             <p className="text-xs text-charcoal-muted mt-1 font-medium">Tap to toggle LED</p>
           </button>
 
-          <div className="flex gap-2">
+          <div className="flex gap-3">
             <button onClick={() => handleResult(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="flashlight-pass-btn">
               Working
             </button>
@@ -130,8 +132,8 @@ export default function FlashlightToggle({ onResult }) {
         </div>
       )}
 
-      {result && (
-        <div className={`section-bg ${result.status === 'pass' ? '!bg-emerald-50' : result.status === 'fail' ? '!bg-red-50' : ''}`}>
+      {state === 'done' && result && (
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : result.status === 'fail' ? '!bg-red-50' : ''}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass' ? '✓ Flashlight working' : result.status === 'fail' ? '✗ Flashlight issue' : '— Torch not available'}
           </p>
