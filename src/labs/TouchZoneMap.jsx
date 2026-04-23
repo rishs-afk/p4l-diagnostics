@@ -8,7 +8,6 @@ const TOTAL_ZONES = GRID_COLS * GRID_ROWS;
 
 export default function TouchZoneMap({ onResult }) {
   const [state, setState] = useState('idle'); // idle | testing | done
-  const [isEdgeTest, setIsEdgeTest] = useState(false);
   const [touched, setTouched] = useState(new Set());
   const [result, setResult] = useState(null);
   const containerRef = useRef(null);
@@ -22,7 +21,6 @@ export default function TouchZoneMap({ onResult }) {
 
   const startTest = () => {
     setState('testing');
-    setIsEdgeTest(false);
     touchedRef.current = new Set();
     setTouched(new Set());
   };
@@ -60,7 +58,7 @@ export default function TouchZoneMap({ onResult }) {
   };
 
   const handleFinish = () => {
-    const pass = touchedRef.current.size >= TOTAL_ZONES * 0.95; // Higher threshold for multi-stage
+    const pass = touchedRef.current.size >= TOTAL_ZONES * 0.90; // 90% threshold
     const r = { status: pass ? 'pass' : 'fail', zonesHit: touchedRef.current.size, total: TOTAL_ZONES };
     setResult(r);
     onResult(r);
@@ -87,7 +85,7 @@ export default function TouchZoneMap({ onResult }) {
     >
       {state === 'idle' && (
         <div className="space-y-3">
-          <p className="text-xs text-charcoal-muted font-medium">Full-screen multi-stage test to verify 100% of the digitizer.</p>
+          <p className="text-xs text-charcoal-muted font-medium">Full-screen edge-to-edge test to verify the entire digitizer surface.</p>
           <button onClick={startTest} className="btn-primary" id="touchzone-start-btn">
             Start Touch Test
           </button>
@@ -96,99 +94,48 @@ export default function TouchZoneMap({ onResult }) {
 
       {state === 'testing' && createPortal(
         <div className="fixed inset-0 z-[100] bg-white flex flex-col">
-          {!isEdgeTest ? (
-            <div className="p-4 flex flex-col flex-1">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h2 className="text-lg font-bold text-charcoal">Stage 1: Main Area</h2>
-                  <p className="text-[10px] text-charcoal-muted uppercase tracking-wider font-bold">Swipe the visible grid area</p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <span className="text-sm font-semibold text-charcoal">{touched.size}/{TOTAL_ZONES}</span>
-                  <div className="w-10 h-10 rounded-full border-2 border-slate-100 flex items-center justify-center relative">
-                    <span className="text-[10px] font-bold text-p4l-red">{progress}%</span>
-                    <svg className="absolute inset-0 -rotate-90" viewBox="0 0 36 36">
-                      <circle cx="18" cy="18" r="16" fill="none" stroke="#E30613" strokeWidth="2" strokeDasharray={`${progress}, 100`} />
-                    </svg>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                ref={containerRef}
-                className="flex-1 touch-none select-none overflow-hidden rounded-xl border border-slate-100 shadow-inner"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
-                  gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
-                  gap: '1px',
-                  backgroundColor: '#f1f5f9'
-                }}
-                onTouchStart={handleTouch}
-                onTouchMove={handleTouch}
-              >
-                {Array.from({ length: TOTAL_ZONES }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={`transition-all duration-200 ${
-                      touched.has(i) ? 'bg-p4l-red shadow-[inset_0_0_8px_rgba(0,0,0,0.1)]' : 'bg-white'
-                    }`}
-                  />
-                ))}
-              </div>
-
-              <div className="mt-4 flex gap-3">
-                <button onClick={handleFinish} className="btn-secondary flex-1">
-                  Finish Now
-                </button>
-                <button onClick={() => setIsEdgeTest(true)} className="btn-primary flex-[2]">
-                  Test Edges →
-                </button>
-              </div>
+          <div className="relative w-full h-full touch-none select-none">
+            <div
+              ref={containerRef}
+              className="absolute inset-0 bg-slate-100"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
+                gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
+                gap: '1px',
+              }}
+              onTouchStart={handleTouch}
+              onTouchMove={handleTouch}
+            >
+              {Array.from({ length: TOTAL_ZONES }).map((_, i) => (
+                <div
+                  key={i}
+                  className={`transition-all duration-200 ${
+                    touched.has(i) ? 'bg-p4l-red' : 'bg-white'
+                  }`}
+                />
+              ))}
             </div>
-          ) : (
-            <div className="relative w-full h-full touch-none select-none">
-              <div
-                ref={containerRef}
-                className="absolute inset-0 bg-slate-100"
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
-                  gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
-                  gap: '1px',
-                }}
-                onTouchStart={handleTouch}
-                onTouchMove={handleTouch}
-              >
-                {Array.from({ length: TOTAL_ZONES }).map((_, i) => (
-                  <div
-                    key={i}
-                    className={`transition-all duration-200 ${
-                      touched.has(i) ? 'bg-p4l-red' : 'bg-white'
-                    }`}
-                  />
-                ))}
-              </div>
-              
-              {/* Floating controls for edge test */}
-              <div className="absolute top-6 left-1/2 -translate-x-1/2 px-4 py-2 bg-charcoal/80 backdrop-blur-md rounded-full pointer-events-none shadow-lg border border-white/10">
-                <p className="text-[10px] text-white font-bold uppercase tracking-widest whitespace-nowrap">
-                  Stage 2: Swipe edges to finish ({touched.size}/{TOTAL_ZONES})
-                </p>
-              </div>
-
-              <button 
-                onClick={handleFinish}
-                className="absolute bottom-10 left-1/2 -translate-x-1/2 w-16 h-16 bg-white/20 backdrop-blur-xl border border-white/30 rounded-full flex items-center justify-center active:scale-90 transition-transform shadow-2xl"
-              >
-                <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E30613" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                </div>
-              </button>
+            
+            {/* Floating controls */}
+            <div className="absolute top-10 left-1/2 -translate-x-1/2 px-4 py-2 bg-charcoal/80 backdrop-blur-md rounded-full pointer-events-none shadow-lg border border-white/10 flex items-center gap-3">
+              <div className="w-2 h-2 rounded-full bg-p4l-red animate-pulse" />
+              <p className="text-[10px] text-white font-bold uppercase tracking-widest whitespace-nowrap">
+                Swipe Entire Screen ({progress}%)
+              </p>
             </div>
-          )}
+
+            <button 
+              onClick={handleFinish}
+              className="absolute bottom-10 left-1/2 -translate-x-1/2 w-16 h-16 bg-white/20 backdrop-blur-xl border border-white/30 rounded-full flex items-center justify-center active:scale-90 transition-transform shadow-2xl"
+            >
+              <div className="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-lg">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#E30613" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+              </div>
+            </button>
+          </div>
         </div>,
         document.body
       )}
