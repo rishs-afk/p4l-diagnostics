@@ -74,27 +74,25 @@ export default function BatteryLab({ onResult }) {
       id="lab-battery"
     >
       {battery ? (
-        <div className="section-bg">
-          <div className="flex items-center gap-4">
-            {/* Battery visual */}
-            <div className="relative w-16 h-8 border-2 border-slate-300 rounded-md flex-shrink-0">
-              <div className="absolute right-[-5px] top-1/2 -translate-y-1/2 w-[3px] h-3 bg-slate-300 rounded-r" />
-              <div
-                className={`h-full rounded-sm transition-all duration-500 ${levelColor}`}
-                style={{ width: `${battery.level}%` }}
-              />
-            </div>
-            <div>
-              <p className="text-2xl font-bold text-charcoal">{battery.level}%</p>
-              <p className="text-xs text-charcoal-muted flex items-center gap-1">
-                {battery.charging ? (
-                  <>
-                    <svg className="w-3 h-3 text-emerald-pass" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
-                    Charging
-                  </>
-                ) : 'On Battery'}
-              </p>
-            </div>
+        <div className="section-bg flex items-center justify-between">
+          <div>
+            <p className="text-2xl font-bold text-charcoal">{battery.level}%</p>
+            <p className="text-xs text-charcoal-muted flex items-center gap-1">
+              {battery.charging ? (
+                <>
+                  <svg className="w-3 h-3 text-emerald-pass" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+                  Charging
+                </>
+              ) : 'On Battery'}
+            </p>
+          </div>
+          {/* Battery visual */}
+          <div className="relative w-12 h-6 border-2 border-slate-200 rounded-md flex-shrink-0">
+            <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-[2px] h-2.5 bg-slate-200 rounded-r" />
+            <div
+              className={`h-full rounded-sm transition-all duration-500 ${levelColor}`}
+              style={{ width: `${battery.level}%` }}
+            />
           </div>
         </div>
       ) : !supported ? (

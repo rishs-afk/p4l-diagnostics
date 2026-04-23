@@ -75,14 +75,13 @@ export default function RefreshRate({ onResult }) {
             <p className="text-2xl font-bold text-charcoal">{hz}<span className="text-sm font-medium text-charcoal-muted ml-1">Hz</span></p>
             <p className="text-xs text-charcoal-muted font-medium">{hzLabel} Display</p>
           </div>
-          <div className="flex gap-1.5 items-end h-8">
+          <div className="flex gap-1 items-end h-6">
             {[60, 90, 120].map((tier) => (
               <div
                 key={tier}
-                className={`w-4 rounded-t-sm transition-all duration-500 ${
-                  hz >= tier ? 'bg-p4l-red' : 'bg-slate-200'
+                className={`w-3.5 h-full rounded-sm transition-all duration-500 ${
+                  hz >= tier ? 'bg-p4l-red' : 'bg-slate-100'
                 }`}
-                style={{ height: tier === 60 ? '40%' : tier === 90 ? '70%' : '100%' }}
               />
             ))}
           </div>
