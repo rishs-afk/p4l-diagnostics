@@ -144,15 +144,15 @@ export default function MultiTouch({ onResult }) {
             
             {/* Floating Status Bar */}
             <div className="absolute top-10 left-4 right-4 flex justify-between items-start pointer-events-none">
-              <div className="bg-charcoal/90 backdrop-blur-md p-5 rounded-2xl border border-white/10 shadow-2xl flex items-center">
+              <div className="bg-charcoal/90 backdrop-blur-md px-6 h-[72px] rounded-2xl border border-white/10 shadow-2xl flex items-center">
                 <h2 className="text-white font-bold text-lg">Multi-Touch</h2>
               </div>
               <div className="flex gap-2">
-                <div className="bg-p4l-red p-4 rounded-2xl shadow-xl flex flex-col items-center min-w-[70px]">
+                <div className="bg-p4l-red h-[72px] px-4 rounded-2xl shadow-xl flex flex-col items-center justify-center min-w-[72px]">
                   <span className="text-white font-black text-xl leading-none">{touches.length}</span>
                   <span className="text-[8px] text-white/70 uppercase font-bold mt-1">Active</span>
                 </div>
-                <div className="bg-charcoal p-4 rounded-2xl shadow-xl flex flex-col items-center min-w-[70px]">
+                <div className="bg-charcoal h-[72px] px-4 rounded-2xl shadow-xl flex flex-col items-center justify-center min-w-[72px]">
                   <span className="text-white font-black text-xl leading-none">{maxTouches}</span>
                   <span className="text-[8px] text-slate-400 uppercase font-bold mt-1">Max</span>
                 </div>
