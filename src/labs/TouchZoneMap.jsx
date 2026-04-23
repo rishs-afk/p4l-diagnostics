@@ -91,25 +91,26 @@ export default function TouchZoneMap({ onResult }) {
       )}
 
       {state === 'testing' && (
-        <div className="fixed inset-0 bg-white z-50 flex flex-col">
+        <div className="space-y-3">
           {/* Progress bar */}
-          <div className="p-4 border-b border-slate-100">
-            <div className="flex items-center justify-between mb-2">
-              <span className="text-xs font-semibold text-charcoal">{touched.size}/{TOTAL_ZONES} zones</span>
-              <span className="text-xs font-semibold text-p4l-red">{progress}%</span>
-            </div>
-            <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-p4l-red rounded-full transition-all duration-200" style={{ width: `${progress}%` }} />
-            </div>
+          <div className="flex items-center justify-between mb-1">
+            <span className="text-xs font-semibold text-charcoal">{touched.size}/{TOTAL_ZONES} zones</span>
+            <span className="text-xs font-semibold text-p4l-red">{progress}%</span>
+          </div>
+          <div className="w-full h-1.5 bg-slate-100 rounded-full overflow-hidden mb-3">
+            <div className="h-full bg-p4l-red rounded-full transition-all duration-200" style={{ width: `${progress}%` }} />
           </div>
 
-          {/* Touch grid - full screen */}
+          {/* Touch grid - full width, tall */}
           <div
             ref={containerRef}
-            className="flex-1 grid gap-[2px] touch-none select-none"
+            className="w-screen relative -left-4 -right-4 touch-none select-none"
             style={{
+              display: 'grid',
               gridTemplateColumns: `repeat(${GRID_COLS}, 1fr)`,
               gridTemplateRows: `repeat(${GRID_ROWS}, 1fr)`,
+              gap: '1px',
+              height: 'calc(100vh - 280px)',
             }}
             onTouchStart={handleTouch}
             onTouchMove={handleTouch}
@@ -141,11 +142,9 @@ export default function TouchZoneMap({ onResult }) {
             ))}
           </div>
 
-          <div className="p-4 border-t border-slate-100">
-            <button onClick={handleFinish} className="btn-secondary w-full" id="touchzone-finish-btn">
-              Finish Test ({touched.size}/{TOTAL_ZONES})
-            </button>
-          </div>
+          <button onClick={handleFinish} className="btn-secondary w-full" id="touchzone-finish-btn">
+            Finish Test ({touched.size}/{TOTAL_ZONES})
+          </button>
         </div>
       )}
 
