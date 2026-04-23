@@ -1,10 +1,6 @@
 import { useEffect, useState } from 'react';
 import LabCard from '../components/LabCard';
 
-function toGB(bytes) {
-  return Math.round(bytes / (1024 * 1024 * 1024));
-}
-
 function getHardwareInfo() {
   const info = {
     gpu: 'Unknown GPU',
@@ -35,6 +31,8 @@ function getHardwareInfo() {
 function getIPhoneModel(width, height) {
   const res = `${width}x${height}`;
   const models = {
+    '1320x2868': 'iPhone 16 Pro Max',
+    '1206x2622': 'iPhone 16 / 16 Pro',
     '1290x2796': 'iPhone 15 Pro Max',
     '1179x2556': 'iPhone 15 Pro / 14 Pro',
     '1284x2778': 'iPhone 14 Plus / 13 Pro Max',
@@ -45,7 +43,7 @@ function getIPhoneModel(width, height) {
     '1080x2340': 'iPhone 13 mini / 12 mini',
     '750x1334': 'iPhone SE / 8 / 7',
   };
-  return models[res] || 'iPhone';
+  return models[res] || `iPhone (${res})`;
 }
 
 function getMacModel(width, height, chip) {
@@ -80,16 +78,33 @@ async function getClientHints() {
   }
 }
 
+function getAppleTouchClass(ua) {
+  const isIPhoneUA = /iPhone|iPod/.test(ua);
+  const isIPadUA = /iPad/.test(ua);
+  const isDesktopLikeAppleUA = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
+  const shortestSide = Math.min(screen.width, screen.height);
+
+  if (isIPhoneUA) return 'iphone';
+  if (isIPadUA) return 'ipad';
+  if (isDesktopLikeAppleUA) return shortestSide <= 430 ? 'iphone' : 'ipad';
+  return null;
+}
+
+function getAppleOSVersion(ua) {
+  const match = ua.match(/OS (\d+(?:[_\.]\d+)+)/) || ua.match(/Version\/(\d+(?:\.\d+)+)/);
+  return match ? match[1].replace(/_/g, '.') : null;
+}
+
 function detectOS(ua, hints) {
   let os = 'Unknown OS';
   const platform = hints.platform || navigator.userAgentData?.platform || navigator.platform || '';
-  const isiPadDesktopUA = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
+  const appleTouchClass = getAppleTouchClass(ua);
 
-  const isIOS = /iPad|iPhone|iPod/.test(ua) || platform === 'iOS' || isiPadDesktopUA;
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || platform === 'iOS' || appleTouchClass !== null;
   if (isIOS) {
-    os = isiPadDesktopUA ? 'iPadOS' : 'iOS';
-    const match = ua.match(/OS (\d+[_\.]\d+)/);
-    if (match) os += ' ' + match[1].replace(/_/g, '.');
+    os = appleTouchClass === 'ipad' ? 'iPadOS' : 'iOS';
+    const version = getAppleOSVersion(ua);
+    if (version) os += ' ' + version;
   } else if (/Android/.test(ua)) {
     os = 'Android';
     const match = ua.match(/Android (\d+\.?\d*)/);
@@ -106,12 +121,15 @@ function detectOS(ua, hints) {
 }
 
 function detectModel(ua, hints, hardware, width, height) {
-  const isIOS = /iPad|iPhone|iPod/.test(ua) || hints.platform === 'iOS';
+  const appleTouchClass = getAppleTouchClass(ua);
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || hints.platform === 'iOS' || appleTouchClass !== null;
   const isMacLike = /Macintosh/.test(ua) || navigator.platform === 'MacIntel' || hints.platform === 'macOS';
 
   let modelLabel = navigator.platform || 'Unknown';
-  if (isIOS && /iPhone/.test(ua)) {
+  if (isIOS && appleTouchClass === 'iphone') {
     modelLabel = getIPhoneModel(width, height);
+  } else if (isIOS && appleTouchClass === 'ipad') {
+    modelLabel = 'iPad (exact model unavailable in browser)';
   } else if (hints.model && hints.model !== 'Unknown') {
     modelLabel = hints.model;
   } else if (isMacLike) {
@@ -148,7 +166,7 @@ async function parseDeviceContext() {
 
 export default function DeviceContext({ onResult }) {
   const [info, setInfo] = useState(null);
-  const [storage, setStorage] = useState('Estimating...');
+  const [storage, setStorage] = useState('Checking...');
 
   useEffect(() => {
     let mounted = true;
@@ -157,24 +175,8 @@ export default function DeviceContext({ onResult }) {
       const data = await parseDeviceContext();
       if (!mounted) return;
 
-      if (navigator.storage && navigator.storage.estimate) {
-        try {
-          const estimate = await navigator.storage.estimate();
-          const quotaGB = estimate.quota ? toGB(estimate.quota) : null;
-          const usedGB = estimate.usage ? toGB(estimate.usage) : null;
-          const storageLabel = quotaGB
-            ? `${usedGB ?? 0} / ${quotaGB} GB Browser Quota`
-            : 'Browser quota unavailable';
-          setStorage(storageLabel);
-          onResult({ status: 'pass', data: { ...data, storageQuotaGB: quotaGB, storageUsageGB: usedGB } });
-        } catch (e) {
-          setStorage('Browser quota unavailable');
-          onResult({ status: 'pass', data });
-        }
-      } else {
-        setStorage('Browser quota unavailable');
-        onResult({ status: 'pass', data });
-      }
+      setStorage('Unavailable in browser (privacy restriction)');
+      onResult({ status: 'pass', data: { ...data, systemStorageTotal: null } });
 
       setInfo(data);
     };
@@ -202,7 +204,7 @@ export default function DeviceContext({ onResult }) {
               ['OS', info.os],
               ['Hardware', info.modelLabel],
               ['RAM', info.memory],
-              ['Browser Storage', storage],
+              ['System Storage', storage],
               ['Cores', info.cores + ' CPU'],
               ['Pixel Density', info.pixelRatio],
             ].map(([label, value]) => (
