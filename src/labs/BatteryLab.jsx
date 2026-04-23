@@ -60,7 +60,7 @@ export default function BatteryLab({ onResult }) {
     : 'bg-slate-200';
 
   const Icon = () => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <rect x="1" y="6" width="18" height="12" rx="2" ry="2"></rect>
       <line x1="23" y1="13" x2="23" y2="11"></line>
     </svg>
@@ -77,7 +77,7 @@ export default function BatteryLab({ onResult }) {
         <div className="section-bg flex items-center justify-between">
           <div>
             <p className="text-2xl font-bold text-charcoal">{battery.level}%</p>
-            <p className="text-xs text-charcoal-muted flex items-center gap-1">
+            <p className="text-xs text-charcoal/70 flex items-center gap-1">
               {battery.charging ? (
                 <>
                   <svg className="w-3 h-3 text-emerald-pass" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -87,8 +87,8 @@ export default function BatteryLab({ onResult }) {
             </p>
           </div>
           {/* Battery visual */}
-          <div className="relative w-12 h-6 border-2 border-slate-200 rounded-md flex-shrink-0">
-            <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-[2px] h-2.5 bg-slate-200 rounded-r" />
+          <div className="relative w-12 h-6 border-2 border-slate-300 rounded-md flex-shrink-0">
+            <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-[2px] h-2.5 bg-slate-300 rounded-r" />
             <div
               className={`h-full rounded-sm transition-all duration-500 ${levelColor}`}
               style={{ width: `${battery.level}%` }}
