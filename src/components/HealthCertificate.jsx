@@ -1,5 +1,4 @@
-import { useMemo, useState } from 'react';
-import { createPortal } from 'react-dom';
+import { useMemo } from 'react';
 
 const icons = {
   deviceContext: (
@@ -80,7 +79,7 @@ const icons = {
 };
 
 export default function HealthCertificate({ results, onRestart }) {
-  const [showFullReport, setShowFullReport] = useState(false);
+  const referenceNumber = useMemo(() => 'P4L-' + Math.random().toString(36).substring(2, 9).toUpperCase(), []);
 
   const { score, totalLabs, passedLabs, details } = useMemo(() => {
     const labs = [
@@ -146,7 +145,7 @@ export default function HealthCertificate({ results, onRestart }) {
             </div>
           </div>
           <h2 className="text-2xl font-bold text-charcoal tracking-tight">Health Certificate</h2>
-          <p className="text-sm text-charcoal-muted font-medium mt-1">Verified Hardware Scan • {new Date().toLocaleDateString()}</p>
+          <p className="text-sm text-charcoal-muted font-medium mt-1">Ref: {referenceNumber} • {new Date().toLocaleDateString()}</p>
         </div>
 
         <div className="p-6">
@@ -164,19 +163,49 @@ export default function HealthCertificate({ results, onRestart }) {
           </div>
 
 
+          </div>
+
+          <h3 className="text-xs font-bold text-charcoal-muted uppercase tracking-widest mb-4">Detailed Report</h3>
+          <div className="space-y-3">
+            {details.map((lab) => (
+              <div key={lab.id} className="flex flex-col p-4 rounded-2xl border border-slate-100 bg-slate-50/50 print:break-inside-avoid">
+                <div className="flex items-center justify-between mb-1">
+                  <div className="flex items-center gap-3">
+                    <span className="text-p4l-red bg-white p-2 rounded-xl shadow-sm border border-slate-100">{lab.icon}</span>
+                    <span className="font-bold text-charcoal">{lab.label}</span>
+                  </div>
+                  <div>
+                    {lab.status === 'pass' ? (
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-pass bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Pass</span>
+                    ) : lab.status === 'fail' ? (
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-p4l-red bg-red-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Fail</span>
+                    ) : (
+                      <span className="text-[9px] font-bold text-slate-500 bg-slate-200 px-2.5 py-1 rounded-full uppercase tracking-wider">{lab.status}</span>
+                    )}
+                  </div>
+                </div>
+                <div className="pl-[52px]">
+                  {renderDetailText(lab.id, lab.result)}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div className="p-6 bg-white border-t border-slate-100">
+        <div className="p-6 bg-white border-t border-slate-100 print:hidden">
           <button 
-            onClick={() => setShowFullReport(true)} 
-            className="w-full py-4 bg-charcoal text-white font-bold rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+            onClick={() => window.print()} 
+            className="w-full py-4 bg-charcoal text-white font-bold rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 mb-3"
           >
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
-              <line x1="3" y1="9" x2="21" y2="9"></line>
-              <line x1="9" y1="21" x2="9" y2="9"></line>
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
             </svg>
-            View Full Report
+            Download Data
+          </button>
+          <button onClick={onRestart} className="btn-secondary w-full">
+            Restart Diagnostic Run
           </button>
         </div>
       </div>
@@ -184,58 +213,6 @@ export default function HealthCertificate({ results, onRestart }) {
         Certified Hardware Assessment • Protect4Less Diagnostic Tool
       </p>
 
-      {showFullReport && createPortal(
-        <div className="fixed inset-0 z-[100] bg-white flex flex-col h-[100dvh] animate-fade-in overflow-hidden">
-          {/* Header */}
-          <div className="flex-shrink-0 px-4 py-4 border-b border-slate-100 flex items-center justify-between bg-white/90 backdrop-blur-md z-10">
-            <h2 className="text-lg font-bold text-charcoal tracking-tight">Full Diagnostic Report</h2>
-            <button 
-              onClick={() => setShowFullReport(false)}
-              className="w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 text-charcoal hover:bg-slate-200 transition-colors"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18"></line>
-                <line x1="6" y1="6" x2="18" y2="18"></line>
-              </svg>
-            </button>
-          </div>
-
-          {/* List */}
-          <div className="flex-1 overflow-y-auto px-4 py-6 custom-scrollbar pb-32 bg-slate-50">
-            <div className="space-y-3">
-              {details.map((lab) => (
-                <div key={lab.id} className="flex flex-col p-4 rounded-2xl border border-slate-100 bg-white shadow-sm">
-                  <div className="flex items-center justify-between mb-1">
-                    <div className="flex items-center gap-3">
-                      <span className="text-p4l-red bg-slate-50 p-2 rounded-xl border border-slate-100">{lab.icon}</span>
-                      <span className="font-bold text-charcoal">{lab.label}</span>
-                    </div>
-                    <div>
-                      {lab.status === 'pass' ? (
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-pass bg-emerald-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Pass</span>
-                      ) : lab.status === 'fail' ? (
-                        <span className="flex items-center gap-1 text-[10px] font-bold text-p4l-red bg-red-50 px-2.5 py-1 rounded-full uppercase tracking-wider">Fail</span>
-                      ) : (
-                        <span className="text-[9px] font-bold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-full uppercase tracking-wider">{lab.status}</span>
-                      )}
-                    </div>
-                  </div>
-                  <div className="pl-[52px]">
-                    {renderDetailText(lab.id, lab.result)}
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            <div className="mt-8 pt-6 border-t border-slate-200 pb-12">
-               <button onClick={() => { setShowFullReport(false); onRestart(); }} className="btn-secondary w-full">
-                 Restart Diagnostic Run
-               </button>
-            </div>
-          </div>
-        </div>,
-        document.body
-      )}
     </div>
   );
 }
