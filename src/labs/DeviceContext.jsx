@@ -91,8 +91,18 @@ function getAppleTouchClass(ua) {
 }
 
 function getAppleOSVersion(ua) {
-  const match = ua.match(/OS (\d+(?:[_\.]\d+)+)/) || ua.match(/Version\/(\d+(?:\.\d+)+)/);
-  return match ? match[1].replace(/_/g, '.') : null;
+  const osMatch = ua.match(/OS (\d+(?:[_\.]\d+)+)/);
+  const versionMatch = ua.match(/Version\/(\d+(?:\.\d+)+)/);
+
+  const osVersion = osMatch ? osMatch[1].replace(/_/g, '.') : null;
+  const browserVersion = versionMatch ? versionMatch[1] : null;
+
+  if (!osVersion) return browserVersion;
+  if (!browserVersion) return osVersion;
+
+  const osMajor = parseInt(osVersion.split('.')[0], 10);
+  const browserMajor = parseInt(browserVersion.split('.')[0], 10);
+  return browserMajor > osMajor ? browserVersion : osVersion;
 }
 
 function detectOS(ua, hints) {
