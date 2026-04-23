@@ -82,21 +82,23 @@ async function getClientHints() {
 
 function detectOS(ua, hints) {
   let os = 'Unknown OS';
+  const platform = hints.platform || navigator.userAgentData?.platform || navigator.platform || '';
+  const isiPadDesktopUA = /Macintosh/.test(ua) && navigator.maxTouchPoints > 1;
 
-  const isIOS = /iPad|iPhone|iPod/.test(ua) || hints.platform === 'iOS';
+  const isIOS = /iPad|iPhone|iPod/.test(ua) || platform === 'iOS' || isiPadDesktopUA;
   if (isIOS) {
-    os = 'iOS';
+    os = isiPadDesktopUA ? 'iPadOS' : 'iOS';
     const match = ua.match(/OS (\d+[_\.]\d+)/);
     if (match) os += ' ' + match[1].replace(/_/g, '.');
   } else if (/Android/.test(ua)) {
     os = 'Android';
     const match = ua.match(/Android (\d+\.?\d*)/);
     if (match) os += ' ' + match[1];
-  } else if (/Mac OS X|Macintosh/.test(ua) || hints.platform === 'macOS') {
+  } else if (/Mac OS X|Macintosh/.test(ua) || platform === 'macOS') {
     os = 'macOS';
-  } else if (/Windows/.test(ua) || hints.platform === 'Windows') {
+  } else if (/Windows/.test(ua) || platform === 'Windows') {
     os = 'Windows';
-  } else if (/Linux/.test(ua) || hints.platform === 'Linux') {
+  } else if (/Linux/.test(ua) || platform === 'Linux') {
     os = 'Linux';
   }
 
