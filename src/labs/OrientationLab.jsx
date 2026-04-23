@@ -7,7 +7,7 @@ export default function OrientationLab({ onResult }) {
   const [position, setPosition] = useState({ x: 50, y: 50 });
   const [inTarget, setInTarget] = useState(false);
   const [holdTime, setHoldTime] = useState(0);
-  const [supported, setSupported] = useState(true);
+  const [raw, setRaw] = useState({ beta: 0, gamma: 0 });
   const listenerRef = useRef(null);
   const holdTimerRef = useRef(null);
 
@@ -17,6 +17,7 @@ export default function OrientationLab({ onResult }) {
   const cleanup = useCallback(() => {
     if (listenerRef.current) {
       window.removeEventListener('deviceorientation', listenerRef.current);
+      window.removeEventListener('deviceorientationabsolute', listenerRef.current);
       listenerRef.current = null;
     }
     if (holdTimerRef.current) {
@@ -28,40 +29,76 @@ export default function OrientationLab({ onResult }) {
   useEffect(() => cleanup, [cleanup]);
 
   const startTest = async () => {
+    let permissionGranted = false;
+
+    // 1. Request Permission (iOS)
     if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
       try {
         const perm = await DeviceOrientationEvent.requestPermission();
-        if (perm !== 'granted') {
-          setSupported(false);
-          const r = { status: 'fail', reason: 'Permission denied' };
-          setResult(r);
-          onResult(r);
-          setState('done');
-          return;
-        }
-      } catch {
-        setSupported(false);
-        const r = { status: 'fail', reason: 'Permission request failed' };
-        setResult(r);
-        onResult(r);
-        setState('done');
-        return;
+        permissionGranted = perm === 'granted';
+      } catch (err) {
+        console.error('Permission request failed:', err);
       }
+    } else {
+      // Android or older browsers
+      permissionGranted = true;
     }
 
+    if (!permissionGranted) {
+      const r = { status: 'fail', reason: 'Permission denied' };
+      setResult(r);
+      onResult(r);
+      setState('done');
+      return;
+    }
+
+    // 2. Start Testing State
     setState('testing');
+    setHoldTime(0);
+
+    // 3. Define Handler with Orientation Awareness
     const handler = (event) => {
-      const gamma = event.gamma || 0;
-      const beta = event.beta || 0;
-      const x = Math.min(100, Math.max(0, 50 + (gamma / 90) * 50));
-      const y = Math.min(100, Math.max(0, 50 + (beta / 90) * 50));
-      setPosition({ x, y });
-      const dx = x - TARGET.x;
-      const dy = y - TARGET.y;
+      // Use beta and gamma
+      let beta = event.beta || 0;
+      let gamma = event.gamma || 0;
+      
+      setRaw({ beta, gamma });
+
+      // Handle screen orientation (Portrait vs Landscape)
+      const orientation = window.orientation || (window.screen && window.screen.orientation && window.screen.orientation.angle) || 0;
+
+      let x, y;
+      
+      if (orientation === 90) { // Landscape Left
+        x = 50 + (beta / 90) * 50;
+        y = 50 + (-gamma / 90) * 50;
+      } else if (orientation === -90 || orientation === 270) { // Landscape Right
+        x = 50 + (-beta / 90) * 50;
+        y = 50 + (gamma / 90) * 50;
+      } else if (orientation === 180) { // Upside Down
+        x = 50 + (-gamma / 90) * 50;
+        y = 50 + (-beta / 90) * 50;
+      } else { // Portrait
+        x = 50 + (gamma / 90) * 50;
+        y = 50 + (beta / 90) * 50;
+      }
+
+      // Constrain and Update
+      const constrainedX = Math.min(100, Math.max(0, x));
+      const constrainedY = Math.min(100, Math.max(0, y));
+      
+      setPosition({ x: constrainedX, y: constrainedY });
+
+      // Check Target
+      const dx = constrainedX - TARGET.x;
+      const dy = constrainedY - TARGET.y;
       const dist = Math.sqrt(dx * dx + dy * dy);
       setInTarget(dist < TARGET.radius);
     };
-    window.addEventListener('deviceorientation', handler);
+
+    // 4. Attach Listeners Immediately
+    const eventType = 'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
+    window.addEventListener(eventType, handler, true);
     listenerRef.current = handler;
   };
 
@@ -123,10 +160,11 @@ export default function OrientationLab({ onResult }) {
 
       {state === 'testing' && (
         <div className="space-y-3">
-          <div className="section-bg relative overflow-hidden" style={{ height: '180px' }}>
+          <div className="section-bg relative overflow-hidden bg-slate-50 border border-slate-100" style={{ height: '180px' }}>
+            {/* Target Area */}
             <div
-              className={`absolute w-12 h-12 rounded-full border-2 border-dashed transition-colors duration-300 ${
-                inTarget ? 'border-emerald-pass bg-emerald-pass/20' : 'border-slate-300'
+              className={`absolute w-14 h-14 rounded-full border-2 border-dashed transition-all duration-300 ${
+                inTarget ? 'border-emerald-pass bg-emerald-pass/20 scale-110' : 'border-slate-300'
               }`}
               style={{
                 left: `${TARGET.x}%`,
@@ -134,29 +172,38 @@ export default function OrientationLab({ onResult }) {
                 transform: 'translate(-50%, -50%)',
               }}
             >
-              {inTarget && (
-                <div className="absolute inset-0 flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center">
+                {inTarget ? (
                   <span className="text-xs font-bold text-emerald-pass">{holdTime.toFixed(1)}s</span>
-                </div>
-              )}
+                ) : (
+                  <div className="w-1 h-1 bg-slate-300 rounded-full" />
+                )}
+              </div>
             </div>
 
+            {/* Tilt Dot */}
             <div
-              className={`absolute w-6 h-6 rounded-full shadow-lg transition-colors duration-200 ${
-                inTarget ? 'bg-emerald-pass' : 'bg-p4l-red'
+              className={`absolute w-6 h-6 rounded-full shadow-lg transition-all duration-75 ${
+                inTarget ? 'bg-emerald-pass scale-125' : 'bg-p4l-red'
               }`}
               style={{
                 left: `${position.x}%`,
                 top: `${position.y}%`,
                 transform: 'translate(-50%, -50%)',
-                transition: 'left 0.1s, top 0.1s',
               }}
-            />
+            >
+              <div className="absolute inset-0 rounded-full animate-ping bg-current opacity-20" />
+            </div>
           </div>
 
-          <p className="text-xs text-charcoal-muted text-center font-medium">
-            Tilt dot into circle
-          </p>
+          <div className="flex items-center justify-between px-1">
+             <p className="text-[10px] text-charcoal-muted font-bold uppercase tracking-tight">
+               Tilt phone to reach target
+             </p>
+             <p className="text-[9px] text-slate-400 font-mono">
+               B: {raw.beta.toFixed(0)}° G: {raw.gamma.toFixed(0)}°
+             </p>
+          </div>
 
           <div className="flex gap-2">
             <button onClick={() => handleSkip(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="orientation-pass-btn">
