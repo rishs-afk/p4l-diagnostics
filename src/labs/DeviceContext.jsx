@@ -28,6 +28,22 @@ function getHardwareInfo() {
   return info;
 }
 
+function getIPhoneModel(width, height) {
+  const res = `${width}x${height}`;
+  const models = {
+    '1290x2796': 'iPhone 15 Pro Max',
+    '1179x2556': 'iPhone 15 Pro / 14 Pro',
+    '1284x2778': 'iPhone 14 Plus / 13 Pro Max',
+    '1170x2532': 'iPhone 15 / 14 / 13',
+    '1125x2436': 'iPhone 11 Pro / X / XS',
+    '1242x2688': 'iPhone 11 Pro Max / XS Max',
+    '828x1792': 'iPhone 11 / XR',
+    '1080x2340': 'iPhone 13 mini / 12 mini',
+    '750x1334': 'iPhone SE / 8 / 7',
+  };
+  return models[res] || 'iPhone';
+}
+
 function getMacModel(width, height, chip) {
   const res = `${width}x${height}`;
   const cores = navigator.hardwareConcurrency || 8;
@@ -44,13 +60,10 @@ function getMacModel(width, height, chip) {
   };
   
   let base = models[res];
-  
   if (!base) {
-    // Heuristic fallback
     if (cores <= 10) base = 'MacBook Air';
     else base = 'MacBook Pro';
   }
-  
   return chip ? `${base} (${chip})` : base;
 }
 
@@ -63,7 +76,8 @@ function parseUserAgent() {
   const h = Math.round(screen.height * dpr);
 
   // OS detection
-  if (/iPad|iPhone|iPod/.test(ua)) {
+  const isIOS = /iPad|iPhone|iPod/.test(ua);
+  if (isIOS) {
     os = 'iOS';
     const match = ua.match(/OS (\d+[_\.]\d+)/);
     if (match) os += ' ' + match[1].replace('_', '.');
@@ -83,7 +97,9 @@ function parseUserAgent() {
 
   // Model Label improvement
   let modelLabel = navigator.platform || 'Unknown';
-  if (modelLabel === 'MacIntel' || modelLabel === 'Macintosh') {
+  if (isIOS && /iPhone/.test(ua)) {
+    modelLabel = getIPhoneModel(w, h);
+  } else if (modelLabel === 'MacIntel' || modelLabel === 'Macintosh') {
     if (hardware.chip) {
       modelLabel = getMacModel(w, h, hardware.chip);
     } else if (navigator.maxTouchPoints > 0) {
