@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import LabCard from '../components/LabCard';
 
-export default function HapticTest({ onResult }) {
+export default function HapticTest({ onResult, onRedo }) {
   const [state, setState] = useState('idle');
   const [tested, setTested] = useState(false);
   const [result, setResult] = useState(null);
@@ -37,6 +37,7 @@ export default function HapticTest({ onResult }) {
       icon={<Icon />}
       status={result ? result.status : 'pending'}
       id="lab-haptic"
+      onRedo={onRedo}
     >
       {state !== 'done' && (
         <div className="space-y-3">

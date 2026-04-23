@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import LabCard from '../components/LabCard';
 
-export default function AudioSpectrum({ onResult }) {
+export default function AudioSpectrum({ onResult, onRedo }) {
   const [state, setState] = useState('idle'); // idle | listening | done
   const [result, setResult] = useState(null);
   const [hasSignal, setHasSignal] = useState(false);
@@ -152,6 +152,7 @@ export default function AudioSpectrum({ onResult }) {
       icon={<Icon />}
       status={result ? result.status : state === 'listening' ? 'running' : 'pending'}
       id="lab-audio-spectrum"
+      onRedo={onRedo}
     >
       {state === 'idle' && (
         <div className="space-y-3">

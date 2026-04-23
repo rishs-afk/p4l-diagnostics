@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import LabCard from '../components/LabCard';
 
-export default function OrientationLab({ onResult }) {
+export default function OrientationLab({ onResult, onRedo }) {
   const [state, setState] = useState('idle');
   const [result, setResult] = useState(null);
   const [position, setPosition] = useState({ x: 50, y: 50 });
@@ -148,6 +148,7 @@ export default function OrientationLab({ onResult }) {
       icon={<Icon />}
       status={result ? result.status : state === 'testing' ? 'running' : 'pending'}
       id="lab-orientation"
+      onRedo={onRedo}
     >
       {state === 'idle' && (
         <div className="space-y-3">

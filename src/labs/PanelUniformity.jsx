@@ -9,7 +9,7 @@ const COLORS = [
   { name: 'Black', value: '#000000' },
 ];
 
-export default function PanelUniformity({ onResult }) {
+export default function PanelUniformity({ onResult, onRedo }) {
   const [state, setState] = useState('idle');
   const [colorIndex, setColorIndex] = useState(0);
   const [result, setResult] = useState(null);
@@ -106,6 +106,7 @@ export default function PanelUniformity({ onResult }) {
       icon={<Icon />}
       status={result ? result.status : state === 'confirm' ? 'running' : 'pending'}
       id="lab-panel-uniformity"
+      onRedo={onRedo}
     >
       {state === 'idle' && (
         <div className="space-y-3">

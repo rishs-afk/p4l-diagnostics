@@ -4,7 +4,7 @@ import LabCard from '../components/LabCard';
 
 const COLORS = ['#E30613', '#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EC4899', '#06B6D4', '#F97316', '#6366F1', '#14B8A6'];
 
-export default function MultiTouch({ onResult }) {
+export default function MultiTouch({ onResult, onRedo }) {
   const [state, setState] = useState('idle');
   const [touches, setTouches] = useState([]);
   const [maxTouches, setMaxTouches] = useState(0);
@@ -120,6 +120,7 @@ export default function MultiTouch({ onResult }) {
       icon={<Icon />}
       status={result ? result.status : state === 'testing' ? 'running' : 'pending'}
       id="lab-multi-touch"
+      onRedo={onRedo}
     >
       {state === 'idle' && (
         <div className="space-y-3">

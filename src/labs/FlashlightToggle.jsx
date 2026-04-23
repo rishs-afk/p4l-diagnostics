@@ -1,7 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import LabCard from '../components/LabCard';
 
-export default function FlashlightToggle({ onResult }) {
+export default function FlashlightToggle({ onResult, onRedo }) {
   const [state, setState] = useState('idle');
   const [torchOn, setTorchOn] = useState(false);
   const [supported, setSupported] = useState(true);

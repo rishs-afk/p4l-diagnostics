@@ -6,7 +6,7 @@ const GRID_COLS = 5;
 const GRID_ROWS = 8;
 const TOTAL_ZONES = GRID_COLS * GRID_ROWS;
 
-export default function TouchZoneMap({ onResult }) {
+export default function TouchZoneMap({ onResult, onRedo }) {
   const [state, setState] = useState('idle'); // idle | testing | done
   const [touched, setTouched] = useState(new Set());
   const [result, setResult] = useState(null);
@@ -82,6 +82,7 @@ export default function TouchZoneMap({ onResult }) {
       icon={<Icon />}
       status={result ? result.status : state === 'testing' ? 'running' : 'pending'}
       id="lab-touch-zone"
+      onRedo={onRedo}
     >
       {state === 'idle' && (
         <div className="space-y-3">
