@@ -93,7 +93,7 @@ export default function FlashlightToggle({ onResult }) {
         </div>
       )}
 
-      {state === 'ready' && (
+      {state === 'ready' && !result && (
         <div className="space-y-3">
           <button
             onClick={toggleTorch}

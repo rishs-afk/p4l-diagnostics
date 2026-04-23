@@ -162,7 +162,7 @@ export default function AudioSpectrum({ onResult }) {
         </div>
       )}
 
-      {state === 'listening' && (
+      {state === 'listening' && !result && (
         <div className="space-y-3">
           <div className="section-bg">
             <canvas

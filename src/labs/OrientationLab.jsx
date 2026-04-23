@@ -158,7 +158,7 @@ export default function OrientationLab({ onResult }) {
         </div>
       )}
 
-      {state === 'testing' && (
+      {state === 'testing' && !result && (
         <div className="space-y-3">
           <div className="section-bg relative overflow-hidden bg-slate-50 border border-slate-100" style={{ height: '180px' }}>
             {/* Target Area */}

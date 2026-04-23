@@ -2,6 +2,7 @@ import { useState } from 'react';
 import LabCard from '../components/LabCard';
 
 export default function HapticTest({ onResult }) {
+  const [state, setState] = useState('idle');
   const [tested, setTested] = useState(false);
   const [result, setResult] = useState(null);
   const [pulsing, setPulsing] = useState(false);
@@ -70,6 +71,7 @@ export default function HapticTest({ onResult }) {
               </button>
             </div>
         </div>
+      )}
       {state === 'done' && result && (
         <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
           <p className="text-sm font-medium">
