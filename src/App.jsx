@@ -6,13 +6,11 @@ import DeviceContext from './labs/DeviceContext';
 import CameraInventory from './labs/CameraInventory';
 import BatteryLab from './labs/BatteryLab';
 import RefreshRate from './labs/RefreshRate';
-import HapticTest from './labs/HapticTest';
 import AudioSpectrum from './labs/AudioSpectrum';
 import OrientationLab from './labs/OrientationLab';
 import FlashlightToggle from './labs/FlashlightToggle';
 import TouchZoneMap from './labs/TouchZoneMap';
 import MultiTouch from './labs/MultiTouch';
-import PanelUniformity from './labs/PanelUniformity';
 import IMEIVerification from './labs/IMEIVerification';
 import HealthCertificate from './components/HealthCertificate';
 
@@ -23,13 +21,11 @@ const initialResults = {
   cameras: null,
   battery: null,
   refreshRate: null,
-  haptic: null,
   audio: null,
   orientation: null,
   flashlight: null,
   touchZone: null,
   multiTouch: null,
-  panelUniformity: null,
   imei: null,
 };
 
@@ -49,7 +45,7 @@ export default function App() {
   const [results, dispatch] = useReducer(resultsReducer, initialResults);
   const [permissions, setPermissions] = useState({ camera: null, mic: null });
   const [resetKeys, setResetKeys] = useState({
-    haptic: 0, audio: 0, orientation: 0, flashlight: 0, touchZone: 0, multiTouch: 0, panelUniformity: 0, imei: 0
+    audio: 0, orientation: 0, flashlight: 0, touchZone: 0, multiTouch: 0, imei: 0
   });
 
   const setResult = useCallback((lab, result) => {
@@ -78,7 +74,7 @@ export default function App() {
     dispatch({ type: 'RESET' });
     setStep('preflight');
     setResetKeys({
-      haptic: 0, audio: 0, orientation: 0, flashlight: 0, touchZone: 0, multiTouch: 0, panelUniformity: 0, imei: 0
+      audio: 0, orientation: 0, flashlight: 0, touchZone: 0, multiTouch: 0, imei: 0
     });
   }, []);
 
@@ -86,7 +82,7 @@ export default function App() {
   const scanLabs = ['deviceContext', 'cameras', 'battery', 'refreshRate', 'imei'];
   const scanComplete = scanLabs.every((lab) => results[lab] !== null);
 
-  const verifyLabs = ['haptic', 'audio', 'orientation', 'flashlight', 'touchZone', 'multiTouch', 'panelUniformity'];
+  const verifyLabs = ['audio', 'orientation', 'flashlight', 'touchZone', 'multiTouch'];
   const verifyComplete = verifyLabs.every((lab) => results[lab] !== null);
 
   if (step === 'preflight') {
@@ -151,13 +147,11 @@ export default function App() {
               <p className="text-sm text-charcoal-muted mt-1">Test each component to verify functionality.</p>
             </div>
 
-            <HapticTest key={`haptic-${resetKeys.haptic}`} onResult={(r) => setResult('haptic', r)} onRedo={() => handleRedo('haptic')} />
             <AudioSpectrum key={`audio-${resetKeys.audio}`} onResult={(r) => setResult('audio', r)} onRedo={() => handleRedo('audio')} />
             <OrientationLab key={`orientation-${resetKeys.orientation}`} onResult={(r) => setResult('orientation', r)} onRedo={() => handleRedo('orientation')} />
             <FlashlightToggle key={`flashlight-${resetKeys.flashlight}`} onResult={(r) => setResult('flashlight', r)} onRedo={() => handleRedo('flashlight')} />
             <TouchZoneMap key={`touchZone-${resetKeys.touchZone}`} onResult={(r) => setResult('touchZone', r)} onRedo={() => handleRedo('touchZone')} />
             <MultiTouch key={`multiTouch-${resetKeys.multiTouch}`} onResult={(r) => setResult('multiTouch', r)} onRedo={() => handleRedo('multiTouch')} />
-            <PanelUniformity key={`panelUniformity-${resetKeys.panelUniformity}`} onResult={(r) => setResult('panelUniformity', r)} onRedo={() => handleRedo('panelUniformity')} />
 
             {verifyComplete && (
               <div className="pt-4 animate-fade-in">
