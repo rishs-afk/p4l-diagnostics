@@ -82,8 +82,6 @@ export default function AudioSpectrum({ onResult, onRedo }) {
     const W = rect.width;
     const H = rect.height;
 
-    let signalDetected = false;
-    let signalFrames = 0;
 
     const draw = () => {
       rafRef.current = requestAnimationFrame(draw);
