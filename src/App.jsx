@@ -13,6 +13,7 @@ import FlashlightToggle from './labs/FlashlightToggle';
 import TouchZoneMap from './labs/TouchZoneMap';
 import MultiTouch from './labs/MultiTouch';
 import PanelUniformity from './labs/PanelUniformity';
+import IMEIVerification from './labs/IMEIVerification';
 import HealthCertificate from './components/HealthCertificate';
 
 const STEPS = ['scan', 'verify', 'summary'];
@@ -29,6 +30,7 @@ const initialResults = {
   touchZone: null,
   multiTouch: null,
   panelUniformity: null,
+  imei: null,
 };
 
 function resultsReducer(state, action) {
@@ -47,7 +49,7 @@ export default function App() {
   const [results, dispatch] = useReducer(resultsReducer, initialResults);
   const [permissions, setPermissions] = useState({ camera: null, mic: null });
   const [resetKeys, setResetKeys] = useState({
-    haptic: 0, audio: 0, orientation: 0, flashlight: 0, touchZone: 0, multiTouch: 0, panelUniformity: 0
+    haptic: 0, audio: 0, orientation: 0, flashlight: 0, touchZone: 0, multiTouch: 0, panelUniformity: 0, imei: 0
   });
 
   const setResult = useCallback((lab, result) => {
@@ -76,12 +78,12 @@ export default function App() {
     dispatch({ type: 'RESET' });
     setStep('preflight');
     setResetKeys({
-      haptic: 0, audio: 0, orientation: 0, flashlight: 0, touchZone: 0, multiTouch: 0, panelUniformity: 0
+      haptic: 0, audio: 0, orientation: 0, flashlight: 0, touchZone: 0, multiTouch: 0, panelUniformity: 0, imei: 0
     });
   }, []);
 
   // Count completed scans
-  const scanLabs = ['deviceContext', 'cameras', 'battery', 'refreshRate'];
+  const scanLabs = ['deviceContext', 'cameras', 'battery', 'refreshRate', 'imei'];
   const scanComplete = scanLabs.every((lab) => results[lab] !== null);
 
   const verifyLabs = ['haptic', 'audio', 'orientation', 'flashlight', 'touchZone', 'multiTouch', 'panelUniformity'];
@@ -129,6 +131,7 @@ export default function App() {
             <CameraInventory onResult={(r) => setResult('cameras', r)} />
             <BatteryLab onResult={(r) => setResult('battery', r)} />
             <RefreshRate onResult={(r) => setResult('refreshRate', r)} />
+            <IMEIVerification key={`imei-${resetKeys.imei}`} onResult={(r) => setResult('imei', r)} />
 
             {scanComplete && (
               <div className="pt-4 animate-fade-in">

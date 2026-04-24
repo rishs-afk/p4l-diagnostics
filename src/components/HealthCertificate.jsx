@@ -3,6 +3,14 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 const icons = {
+  imei: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <line x1="4" y1="9" x2="20" y2="9"></line>
+      <line x1="4" y1="15" x2="20" y2="15"></line>
+      <line x1="10" y1="3" x2="8" y2="21"></line>
+      <line x1="16" y1="3" x2="14" y2="21"></line>
+    </svg>
+  ),
   deviceContext: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <rect x="5" y="2" width="14" height="20" rx="2" ry="2"></rect>
@@ -87,6 +95,7 @@ export default function HealthCertificate({ results, onRestart }) {
   const { score, totalLabs, passedLabs, details } = useMemo(() => {
     const labs = [
       { id: 'deviceContext', label: 'Device Integrity' },
+      { id: 'imei', label: 'Hardware Verification' },
       { id: 'cameras', label: 'Camera Array' },
       { id: 'battery', label: 'Power System' },
       { id: 'refreshRate', label: 'Display Physics' },
@@ -116,6 +125,7 @@ export default function HealthCertificate({ results, onRestart }) {
     if (!result || result.status === 'skipped' || result.status === 'unsupported') return null;
     switch (labId) {
       case 'deviceContext': return <div className="text-[10px] text-slate-500 mt-0.5">{result.model || 'Unknown Device'} • {result.os || 'Unknown OS'}</div>;
+      case 'imei': return <div className="text-[10px] text-slate-500 mt-0.5 font-mono">{result.imei}</div>;
       case 'cameras': 
         if (result.devices) return <div className="text-[10px] text-slate-500 mt-0.5">{result.devices.filter(d=>d.verified).length} verified lens(es)</div>;
         return <div className="text-[10px] text-slate-500 mt-0.5">{result.count} detected</div>;
