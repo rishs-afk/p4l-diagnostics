@@ -111,7 +111,7 @@ export default function HealthCertificate({ results, onRestart }) {
   const renderDetailText = (labId, result) => {
     if (!result || result.status === 'skipped' || result.status === 'unsupported') return null;
     switch (labId) {
-      case 'deviceContext': return <div className="text-[10px] text-slate-500 mt-0.5">{result.model || 'Unknown Device'} • {result.os || 'Unknown OS'}</div>;
+      case 'deviceContext': return <div className="text-[10px] text-slate-500 mt-0.5">{result.data?.modelLabel || 'Unknown Device'} • {result.data?.os || 'Unknown OS'}</div>;
       case 'imei': return <div className="text-[10px] text-slate-500 mt-0.5 font-mono">{result.imei}</div>;
       case 'cameras': 
         if (result.devices) return <div className="text-[10px] text-slate-500 mt-0.5">{result.devices.filter(d=>d.verified).length} verified lens(es)</div>;
