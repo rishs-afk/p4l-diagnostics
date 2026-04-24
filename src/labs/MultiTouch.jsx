@@ -171,21 +171,11 @@ export default function MultiTouch({ onResult, onRedo }) {
             {/* Bottom Controls */}
             <div className="absolute bottom-16 left-6 right-6 flex gap-4 z-[200]">
               <button 
-                onClick={(e) => { e.stopPropagation(); handleResult(false); }}
-                onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); handleResult(false); }}
-                className="flex-1 py-4 bg-white text-p4l-red font-bold rounded-2xl shadow-lg border border-red-100 active:scale-95 transition-transform"
+                onClick={(e) => { e.stopPropagation(); handleResult(maxRef.current >= 2); }}
+                onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); handleResult(maxRef.current >= 2); }}
+                className="w-full py-4 bg-charcoal text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
               >
-                Failed
-              </button>
-              <button 
-                onClick={(e) => { e.stopPropagation(); handleResult(true); }}
-                onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); handleResult(true); }}
-                className="flex-[2] py-4 bg-emerald-pass text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <polyline points="20 6 9 17 4 12"></polyline>
-                </svg>
-                Verified ({maxTouches} Points)
+                Finish Test
               </button>
             </div>
           </div>

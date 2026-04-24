@@ -42,15 +42,21 @@ export default function FlashlightToggle({ onResult, onRedo }) {
     }
   };
 
-  const toggleTorch = async () => {
+  const testTorch = async () => {
     if (!trackRef.current) return;
-    const newState = !torchOn;
     try {
-      await trackRef.current.applyConstraints({
-        advanced: [{ torch: newState }],
-      });
-      setTorchOn(newState);
-    } catch {}
+      await trackRef.current.applyConstraints({ advanced: [{ torch: true }] });
+      setTorchOn(true);
+      setTimeout(async () => {
+        try {
+          await trackRef.current.applyConstraints({ advanced: [{ torch: false }] });
+        } catch {}
+        setTorchOn(false);
+        handleResult(true);
+      }, 1500);
+    } catch {
+      handleResult(false);
+    }
   };
 
   const handleResult = (pass) => {
@@ -96,26 +102,18 @@ export default function FlashlightToggle({ onResult, onRedo }) {
       {state === 'ready' && !result && (
         <div className="space-y-3">
           <button
-            onClick={toggleTorch}
+            onClick={testTorch}
+            disabled={torchOn}
             className={`w-full py-6 rounded-xl text-center transition-all duration-300 border-2 ${
               torchOn
-                ? 'bg-amber-50 border-amber-300 text-amber-700'
-                : 'bg-slate-50 border-slate-200 text-charcoal'
+                ? 'bg-amber-50 border-amber-300 text-amber-700 opacity-80'
+                : 'bg-slate-50 border-slate-200 text-charcoal active:scale-95'
             }`}
-            id="flashlight-toggle-btn"
+            id="flashlight-test-btn"
           >
-            <p className="text-sm font-bold uppercase tracking-widest">{torchOn ? 'ON' : 'OFF'}</p>
-            <p className="text-xs text-charcoal-muted mt-1 font-medium">Tap to toggle LED</p>
+            <p className="text-sm font-bold uppercase tracking-widest">{torchOn ? 'TESTING...' : 'TEST FLASHLIGHT'}</p>
+            <p className="text-xs text-charcoal-muted mt-1 font-medium">Tap to test LED flash</p>
           </button>
-
-          <div className="flex gap-3">
-            <button onClick={() => handleResult(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="flashlight-pass-btn">
-              Working
-            </button>
-            <button onClick={() => handleResult(false)} className="flex-1 btn-secondary !bg-red-50 !text-p4l-red !border-red-200" id="flashlight-fail-btn">
-              Fail
-            </button>
-          </div>
         </div>
       )}
 

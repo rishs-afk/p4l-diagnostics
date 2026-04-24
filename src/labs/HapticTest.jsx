@@ -10,10 +10,15 @@ export default function HapticTest({ onResult, onRedo }) {
 
   const triggerVibration = () => {
     setPulsing(true);
+    let pass = false;
     if (supported) {
       navigator.vibrate([100, 50, 150, 50, 200]);
+      pass = true;
     }
-    setTimeout(() => setPulsing(false), 600);
+    setTimeout(() => {
+      setPulsing(false);
+      handleResult(pass);
+    }, 600);
     setTested(true);
   };
 
@@ -43,7 +48,7 @@ export default function HapticTest({ onResult, onRedo }) {
         <div className="space-y-3">
           {!supported && (
             <div className="text-xs text-amber-600 bg-amber-50 p-2.5 rounded-xl">
-              Vibration API not available on this device. A visual pulse will simulate the test.
+              Vibration API not available on this device.
             </div>
           )}
 
@@ -59,18 +64,9 @@ export default function HapticTest({ onResult, onRedo }) {
               </span>
             )}
             <span className="relative z-10">
-              {pulsing ? 'Vibrating...' : tested ? 'Tap to Test Again' : 'Tap to Vibrate'}
+              {pulsing ? 'Testing...' : 'Tap to Test Vibrate'}
             </span>
           </button>
-
-            <div className="flex gap-3 animate-fade-in">
-              <button onClick={() => handleResult(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="haptic-pass-btn">
-                ✓ Felt It
-              </button>
-              <button onClick={() => handleResult(false)} className="flex-1 btn-secondary !bg-red-50 !text-p4l-red !border-red-200" id="haptic-fail-btn">
-                ✗ Nothing
-              </button>
-            </div>
         </div>
       )}
       {state === 'done' && result && (

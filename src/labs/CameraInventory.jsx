@@ -97,6 +97,7 @@ export default function CameraInventory({ onResult }) {
       }
     } catch (err) {
       console.error('Failed to start camera:', err);
+      stopTest(false);
     }
   };
 
@@ -184,15 +185,9 @@ export default function CameraInventory({ onResult }) {
           <div className="absolute bottom-10 left-6 right-6 flex flex-col gap-3">
             <button 
               onClick={() => stopTest(true)}
-              className="w-full py-4 bg-emerald-pass text-white font-bold rounded-2xl shadow-xl active:scale-[0.98] transition-transform"
+              className="w-full py-4 bg-white text-charcoal font-bold rounded-2xl shadow-xl active:scale-[0.98] transition-transform"
             >
-              Image Looks Good
-            </button>
-            <button 
-              onClick={() => stopTest(false)}
-              className="w-full py-3 bg-white/20 backdrop-blur-md text-white font-semibold rounded-2xl active:scale-[0.98] transition-transform"
-            >
-              Issue Detected
+              Finish Verification
             </button>
           </div>
         </div>

@@ -46,10 +46,10 @@ export default function PanelUniformity({ onResult, onRedo }) {
     if (colorIndex < COLORS.length - 1) {
       setColorIndex((i) => i + 1);
     } else {
-      setState('confirm');
       // Exit Fullscreen
       if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
       else if (document.webkitExitFullscreen) document.webkitExitFullscreen().catch(() => {});
+      handleResult(true);
     }
   };
 
@@ -119,22 +119,7 @@ export default function PanelUniformity({ onResult, onRedo }) {
         </div>
       )}
 
-      {state === 'confirm' && (
-        <div className="space-y-3">
-          <div className="section-bg">
-            <p className="text-sm font-bold text-charcoal mb-1">Panel test complete</p>
-            <p className="text-xs text-charcoal-muted font-medium">Did you notice any dead pixels or color irregularities?</p>
-          </div>
-          <div className="flex gap-2">
-            <button onClick={() => handleResult(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="panel-pass-btn">
-              Looks Good
-            </button>
-            <button onClick={() => handleResult(false)} className="flex-1 btn-secondary !bg-red-50 !text-p4l-red !border-red-200" id="panel-fail-btn">
-              Issues Found
-            </button>
-          </div>
-        </div>
-      )}
+
 
       {state === 'done' && result && (
         <div className={`section-bg mt-3 ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>

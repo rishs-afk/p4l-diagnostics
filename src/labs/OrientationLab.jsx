@@ -100,6 +100,19 @@ export default function OrientationLab({ onResult, onRedo }) {
     const eventType = 'ondeviceorientationabsolute' in window ? 'deviceorientationabsolute' : 'deviceorientation';
     window.addEventListener(eventType, handler, true);
     listenerRef.current = handler;
+
+    // 5. Auto fail after 15 seconds if not passed
+    setTimeout(() => {
+      // Check if not yet done
+      // To do this properly without stale closures, we can just call handleSkip(false) if the component is still mounted and testing
+      // Actually we can just set an auto-fail timeout
+      setResult((prevResult) => {
+        if (!prevResult) {
+          handleSkip(false);
+        }
+        return prevResult;
+      });
+    }, 15000);
   };
 
   useEffect(() => {
@@ -206,14 +219,7 @@ export default function OrientationLab({ onResult, onRedo }) {
              </p>
           </div>
 
-          <div className="flex gap-3">
-            <button onClick={() => handleSkip(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="orientation-pass-btn">
-              Working
-            </button>
-            <button onClick={() => handleSkip(false)} className="flex-1 btn-secondary !bg-red-50 !text-p4l-red !border-red-200" id="orientation-fail-btn">
-              Fail
-            </button>
-          </div>
+
         </div>
       )}
 

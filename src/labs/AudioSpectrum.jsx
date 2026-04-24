@@ -59,6 +59,15 @@ export default function AudioSpectrum({ onResult, onRedo }) {
     const analyser = analyserRef.current;
     if (!canvas || !analyser) return;
 
+    let signalDetected = false;
+    let signalFrames = 0;
+
+    const timeoutId = setTimeout(() => {
+      if (!signalDetected) {
+        handleResult(false);
+      }
+    }, 10000);
+
     const ctx = canvas.getContext('2d');
     const bufferLength = analyser.frequencyBinCount;
     const dataArray = new Uint8Array(bufferLength);
@@ -109,6 +118,8 @@ export default function AudioSpectrum({ onResult, onRedo }) {
         if (signalFrames > 10 && !signalDetected) {
           signalDetected = true;
           setHasSignal(true);
+          clearTimeout(timeoutId);
+          setTimeout(() => handleResult(true), 1500);
         }
       }
     };
@@ -173,16 +184,8 @@ export default function AudioSpectrum({ onResult, onRedo }) {
             />
           </div>
           <p className="text-xs text-charcoal-muted text-center">
-            {hasSignal ? '✓ Audio signal detected — speak to see the spectrum' : 'Listening... speak into your microphone'}
+            {hasSignal ? '✓ Audio signal detected — completing test...' : 'Listening... speak into your microphone'}
           </p>
-          <div className="flex gap-3">
-            <button onClick={() => handleResult(true)} className="flex-1 btn-secondary !bg-emerald-50 !text-emerald-pass !border-emerald-200" id="audio-pass-btn">
-              ✓ Working
-            </button>
-            <button onClick={() => handleResult(false)} className="flex-1 btn-secondary !bg-red-50 !text-p4l-red !border-red-200" id="audio-fail-btn">
-              ✗ No Sound
-            </button>
-          </div>
         </div>
       )}
 
