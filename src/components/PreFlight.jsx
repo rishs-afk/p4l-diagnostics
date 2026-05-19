@@ -125,7 +125,7 @@ export default function PreFlight({ onGranted }) {
 
         <div className="mt-8 flex flex-col items-center gap-2 animate-fade-in" style={{ animationDelay: '0.25s' }}>
           <p className="text-[10px] text-charcoal/40 uppercase tracking-widest font-semibold">Powered by</p>
-          <img src={p4lLogo} alt="Protect4Less" className="h-5 object-contain opacity-50" />
+          <img src={p4lLogo} alt="Protect4Less" className="h-5 object-contain" />
         </div>
       </div>
     </div>
