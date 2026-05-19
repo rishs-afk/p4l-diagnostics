@@ -91,9 +91,14 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white pb-8">
+    <div className="min-h-screen bg-[#0d0d0d] relative overflow-hidden pb-8">
+      {/* Background orbs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-p4l-red rounded-full blur-[120px] opacity-25" />
+        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-p4l-red rounded-full blur-[120px] opacity-20" />
+      </div>
       {/* Header */}
-      <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
+      <div className="sticky top-0 z-50 bg-black/30 backdrop-blur-xl border-b border-white/10">
         <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 pt-3 pb-2">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
@@ -103,7 +108,7 @@ export default function App() {
               <span className="font-bold text-sm text-charcoal tracking-tight uppercase">Diagnostic Lab</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-1.5 h-1.5 rounded-full bg-emerald-pass animate-pulse"></div>
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></div>
               <span className="text-[10px] text-charcoal-muted font-bold uppercase tracking-wider">
                 {step === 'scan' ? 'Analyzing' : step === 'verify' ? 'Verifying' : 'Complete'}
               </span>
@@ -118,8 +123,8 @@ export default function App() {
         {step === 'scan' && (
           <div className="space-y-4">
             <div className="mb-6">
-              <h1 className="text-xl font-bold text-charcoal">System Scan</h1>
-              <p className="text-sm text-charcoal-muted mt-1">Automatically detecting your device hardware.</p>
+              <h1 className="text-xl font-bold text-white">System Scan</h1>
+              <p className="text-sm text-white/50 mt-1">Automatically detecting your device hardware.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -144,8 +149,8 @@ export default function App() {
         {step === 'verify' && (
           <div className="space-y-4">
             <div className="mb-6">
-              <h1 className="text-xl font-bold text-charcoal">Hardware Verification</h1>
-              <p className="text-sm text-charcoal-muted mt-1">Test each component to verify functionality.</p>
+              <h1 className="text-xl font-bold text-white">Hardware Verification</h1>
+              <p className="text-sm text-white/50 mt-1">Test each component to verify functionality.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">

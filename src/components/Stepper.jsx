@@ -11,7 +11,7 @@ export default function Stepper({ currentStep, steps }) {
         return (
           <div key={step} className="flex-1 flex flex-col items-center gap-1.5">
             {/* Progress bar */}
-            <div className="w-full h-1.5 rounded-full bg-slate-100 overflow-hidden">
+            <div className="w-full h-1.5 rounded-full bg-white/10 overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all duration-500 ease-out ${
                   isDone ? 'bg-emerald-pass w-full' : isActive ? 'bg-p4l-red w-full' : 'w-0'
@@ -21,7 +21,7 @@ export default function Stepper({ currentStep, steps }) {
             {/* Label */}
             <span
               className={`text-[10px] font-semibold uppercase tracking-wider transition-colors duration-300 ${
-                isActive ? 'text-p4l-red' : isDone ? 'text-emerald-pass' : 'text-slate-300'
+                isActive ? 'text-p4l-red' : isDone ? 'text-emerald-400' : 'text-white/20'
               }`}
             >
               {stepLabels[step]}

@@ -111,15 +111,15 @@ export default function HealthCertificate({ results, onRestart }) {
   const renderDetailText = (labId, result) => {
     if (!result || result.status === 'skipped' || result.status === 'unsupported') return null;
     switch (labId) {
-      case 'deviceContext': return <div className="text-[10px] text-slate-500 mt-0.5">{result.data?.modelLabel || 'Unknown Device'} • {result.data?.os || 'Unknown OS'}</div>;
-      case 'imei': return <div className="text-[10px] text-slate-500 mt-0.5 font-mono">{result.imei}</div>;
-      case 'cameras': 
-        if (result.devices) return <div className="text-[10px] text-slate-500 mt-0.5">{result.devices.filter(d=>d.verified).length} verified lens(es)</div>;
-        return <div className="text-[10px] text-slate-500 mt-0.5">{result.count} detected</div>;
-      case 'battery': return <div className="text-[10px] text-slate-500 mt-0.5">{result.level ? Math.round(result.level * 100) + '%' : 'Unknown Level'} • {result.charging ? 'Charging' : 'Unplugged'}</div>;
-      case 'refreshRate': return <div className="text-[10px] text-slate-500 mt-0.5">{result.hz || result.label}</div>;
-      case 'touchZone': return <div className="text-[10px] text-slate-500 mt-0.5">{result.coverage ? `${result.coverage}% Coverage` : 'Verified'}</div>;
-      case 'multiTouch': return <div className="text-[10px] text-slate-500 mt-0.5">{result.maxTouches ? `${result.maxTouches} Points Detected` : 'Verified'}</div>;
+      case 'deviceContext': return <div className="text-[10px] text-white/40 mt-0.5">{result.data?.modelLabel || 'Unknown Device'} • {result.data?.os || 'Unknown OS'}</div>;
+      case 'imei': return <div className="text-[10px] text-white/40 mt-0.5 font-mono">{result.imei}</div>;
+      case 'cameras':
+        if (result.devices) return <div className="text-[10px] text-white/40 mt-0.5">{result.devices.filter(d=>d.verified).length} verified lens(es)</div>;
+        return <div className="text-[10px] text-white/40 mt-0.5">{result.count} detected</div>;
+      case 'battery': return <div className="text-[10px] text-white/40 mt-0.5">{result.level ? Math.round(result.level * 100) + '%' : 'Unknown Level'} • {result.charging ? 'Charging' : 'Unplugged'}</div>;
+      case 'refreshRate': return <div className="text-[10px] text-white/40 mt-0.5">{result.hz || result.label}</div>;
+      case 'touchZone': return <div className="text-[10px] text-white/40 mt-0.5">{result.coverage ? `${result.coverage}% Coverage` : 'Verified'}</div>;
+      case 'multiTouch': return <div className="text-[10px] text-white/40 mt-0.5">{result.maxTouches ? `${result.maxTouches} Points Detected` : 'Verified'}</div>;
       default: return null;
     }
   };
@@ -164,14 +164,14 @@ export default function HealthCertificate({ results, onRestart }) {
 
   return (
     <div className="animate-fade-in pb-12">
-      <div ref={certificateRef} className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl shadow-slate-200/50">
+      <div ref={certificateRef} className="bg-white/[0.07] backdrop-blur-xl rounded-3xl border border-white/10 overflow-hidden">
         <div className="lg:flex">
           {/* Score + summary — left panel on desktop */}
-          <div className="bg-slate-50 px-6 py-8 text-center border-b lg:border-b-0 lg:border-r border-slate-100 lg:w-2/5 lg:flex lg:flex-col lg:items-center lg:justify-center">
+          <div className="bg-white/[0.04] px-6 py-8 text-center border-b lg:border-b-0 lg:border-r border-white/10 lg:w-2/5 lg:flex lg:flex-col lg:items-center lg:justify-center">
             <div className="flex justify-center mb-6">
               <div className="relative flex items-center justify-center">
                 <svg className="w-32 h-32 transform -rotate-90">
-                  <circle cx="64" cy="64" r="45" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-200" />
+                  <circle cx="64" cy="64" r="45" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-white/15" />
                   <circle cx="64" cy="64" r="45" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="283" style={{ strokeDashoffset: dashOffset, transition: 'stroke-dashoffset 1.5s ease-out' }} className="text-p4l-red" />
                 </svg>
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
@@ -202,7 +202,7 @@ export default function HealthCertificate({ results, onRestart }) {
             <h3 className="text-xs font-bold text-charcoal-muted uppercase tracking-widest mb-4">Detailed Report</h3>
             <div className="space-y-2">
               {details.map((lab) => (
-                <div key={lab.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/50">
+                <div key={lab.id} className="flex items-center justify-between p-3 rounded-xl border border-white/[0.08] bg-white/[0.04]">
                   <div className="flex items-center gap-3">
                     <span className="text-p4l-red">{lab.icon}</span>
                     <div>
@@ -212,15 +212,15 @@ export default function HealthCertificate({ results, onRestart }) {
                   </div>
                   <div>
                     {lab.status === 'pass' ? (
-                      <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-pass bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-wider">
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-400 bg-emerald-500/15 px-2 py-1 rounded-full uppercase tracking-wider">
                         Pass
                       </span>
                     ) : lab.status === 'fail' ? (
-                      <span className="flex items-center gap-1 text-[10px] font-bold text-p4l-red bg-red-50 px-2 py-1 rounded-full uppercase tracking-wider">
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-red-400 bg-red-500/15 px-2 py-1 rounded-full uppercase tracking-wider">
                         Fail
                       </span>
                     ) : (
-                      <span className="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-full uppercase tracking-wider">
+                      <span className="text-[9px] font-bold text-white/30 bg-white/10 px-2 py-1 rounded-full uppercase tracking-wider">
                         {lab.status}
                       </span>
                     )}
@@ -231,11 +231,11 @@ export default function HealthCertificate({ results, onRestart }) {
           </div>
         </div>
 
-        <div className="p-6 bg-white border-t border-slate-100" data-pdf-ignore>
-          <button 
-            onClick={exportPDF} 
+        <div className="p-6 border-t border-white/10" data-pdf-ignore>
+          <button
+            onClick={exportPDF}
             disabled={isExporting}
-            className="w-full py-4 bg-charcoal text-white font-bold rounded-2xl shadow-lg active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+            className="w-full py-4 bg-p4l-red text-white font-bold rounded-2xl active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 hover:bg-p4l-red-dark"
           >
             {isExporting ? (
               <>

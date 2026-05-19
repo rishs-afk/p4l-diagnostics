@@ -21,7 +21,7 @@ export default function LabCard({ title, icon, status, children, id, onRedo }) {
           {(status === 'pass' || status === 'fail') && onRedo && (
             <button 
               onClick={onRedo}
-              className="text-[10px] uppercase tracking-wider font-bold text-blue-500 hover:text-blue-600 transition-colors flex items-center gap-1"
+              className="text-[10px] uppercase tracking-wider font-bold text-white/40 hover:text-white/70 transition-colors flex items-center gap-1"
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>

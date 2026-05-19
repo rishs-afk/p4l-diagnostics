@@ -20,19 +20,19 @@
 
 @layer components {
   .btn-primary {
-    @apply w-full py-4 px-6 bg-p4l-red text-white font-semibold text-base rounded-2xl 
-           transition-all duration-200 ease-in-out active:scale-[0.97] 
+    @apply w-full py-4 px-6 bg-p4l-red text-white font-semibold text-base rounded-2xl
+           transition-all duration-200 ease-in-out active:scale-[0.97]
            hover:bg-p4l-red-dark focus:outline-none focus:ring-2 focus:ring-p4l-red/30;
   }
 
   .btn-secondary {
-    @apply w-full py-3 px-5 bg-slate-100 text-charcoal font-medium text-sm rounded-xl 
-           border border-slate-200 transition-all duration-200 ease-in-out 
-           active:scale-[0.97] hover:bg-slate-200 focus:outline-none;
+    @apply w-full py-3 px-5 bg-white/10 text-white/80 font-medium text-sm rounded-xl
+           border border-white/15 transition-all duration-200 ease-in-out
+           active:scale-[0.97] hover:bg-white/20 focus:outline-none;
   }
 
   .lab-card {
-    @apply bg-white rounded-2xl border border-slate-200 p-5 
+    @apply bg-white/[0.07] backdrop-blur-xl rounded-3xl border border-white/10 p-5
            transition-all duration-300 ease-in-out animate-slide-up;
   }
 
@@ -49,22 +49,22 @@
   }
 
   .status-pass {
-    @apply status-badge bg-emerald-100/50 text-emerald-pass;
+    @apply status-badge bg-emerald-500/15 text-emerald-400;
   }
 
   .status-fail {
-    @apply status-badge bg-red-100/50 text-p4l-red;
+    @apply status-badge bg-red-500/15 text-red-400;
   }
 
   .status-pending {
-    @apply status-badge bg-slate-200/50 text-charcoal-muted;
+    @apply status-badge bg-white/10 text-white/40;
   }
 
   .status-running {
-    @apply status-badge bg-amber-100/50 text-amber-700;
+    @apply status-badge bg-amber-500/15 text-amber-400;
   }
 
   .section-bg {
-    @apply bg-slate-50 rounded-2xl p-4 border border-slate-100;
+    @apply bg-white/[0.05] rounded-2xl p-4 border border-white/[0.08];
   }
 }

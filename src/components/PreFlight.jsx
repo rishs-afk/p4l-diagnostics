@@ -30,9 +30,14 @@ export default function PreFlight({ onGranted }) {
   }, [onGranted]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
+    <div className="min-h-screen bg-[#0d0d0d] flex flex-col lg:flex-row relative overflow-hidden">
+      {/* Background orbs */}
+      <div className="pointer-events-none fixed inset-0 overflow-hidden">
+        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-p4l-red rounded-full blur-[120px] opacity-25" />
+        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-p4l-red rounded-full blur-[120px] opacity-20" />
+      </div>
       {/* Left hero panel — desktop only */}
-      <div className="hidden lg:flex flex-col items-center justify-center w-1/2 bg-slate-50 border-r border-slate-100 p-16 sticky top-0 min-h-screen">
+      <div className="hidden lg:flex flex-col items-center justify-center w-1/2 bg-white/[0.04] backdrop-blur-xl border-r border-white/10 p-16 sticky top-0 min-h-screen">
         <div className="w-28 h-28 bg-p4l-red rounded-3xl flex items-center justify-center mb-10 shadow-xl shadow-p4l-red/20">
           <img src={eandLogo} alt="e&" className="w-20 h-20 object-contain" />
         </div>
@@ -111,7 +116,7 @@ export default function PreFlight({ onGranted }) {
         </div>
 
         {error && (
-          <div className="mb-4 p-3 bg-red-50 border border-red-100 rounded-xl text-sm text-p4l-red text-left animate-fade-in">
+          <div className="mb-4 p-3 bg-red-500/10 border border-red-500/20 rounded-xl text-sm text-red-400 text-left animate-fade-in">
             {error}
           </div>
         )}
