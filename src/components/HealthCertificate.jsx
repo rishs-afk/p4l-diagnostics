@@ -165,65 +165,69 @@ export default function HealthCertificate({ results, onRestart }) {
   return (
     <div className="animate-fade-in pb-12">
       <div ref={certificateRef} className="bg-white rounded-3xl border border-slate-200 overflow-hidden shadow-xl shadow-slate-200/50">
-        <div className="bg-slate-50 px-6 py-8 text-center border-b border-slate-100">
-          <div className="flex justify-center mb-6">
-            <div className="relative flex items-center justify-center">
-              <svg className="w-32 h-32 transform -rotate-90">
-                <circle cx="64" cy="64" r="45" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-200" />
-                <circle cx="64" cy="64" r="45" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="283" style={{ strokeDashoffset: dashOffset, transition: 'stroke-dashoffset 1.5s ease-out' }} className="text-p4l-red" />
-              </svg>
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-3xl font-extrabold text-charcoal">{score}</span>
-                <span className="text-[10px] font-bold text-charcoal-muted uppercase tracking-tighter">Score</span>
+        <div className="lg:flex">
+          {/* Score + summary — left panel on desktop */}
+          <div className="bg-slate-50 px-6 py-8 text-center border-b lg:border-b-0 lg:border-r border-slate-100 lg:w-2/5 lg:flex lg:flex-col lg:items-center lg:justify-center">
+            <div className="flex justify-center mb-6">
+              <div className="relative flex items-center justify-center">
+                <svg className="w-32 h-32 transform -rotate-90">
+                  <circle cx="64" cy="64" r="45" stroke="currentColor" strokeWidth="8" fill="transparent" className="text-slate-200" />
+                  <circle cx="64" cy="64" r="45" stroke="currentColor" strokeWidth="8" fill="transparent" strokeDasharray="283" style={{ strokeDashoffset: dashOffset, transition: 'stroke-dashoffset 1.5s ease-out' }} className="text-p4l-red" />
+                </svg>
+                <div className="absolute inset-0 flex flex-col items-center justify-center">
+                  <span className="text-3xl font-extrabold text-charcoal">{score}</span>
+                  <span className="text-[10px] font-bold text-charcoal-muted uppercase tracking-tighter">Score</span>
+                </div>
+              </div>
+            </div>
+            <h2 className="text-2xl font-bold text-charcoal tracking-tight">Health Certificate</h2>
+            <p className="text-sm text-charcoal-muted font-medium mt-1">Verified Hardware Scan • {new Date().toLocaleDateString()}</p>
+
+            <div className="grid grid-cols-2 gap-4 mt-8 w-full">
+              <div className="section-bg p-3">
+                <p className="text-[10px] font-bold text-charcoal-muted uppercase mb-1 tracking-wider">Status</p>
+                <p className={`text-sm font-bold ${score >= 90 ? 'text-emerald-pass' : 'text-p4l-red'}`}>
+                  {score >= 90 ? 'Excellent' : score >= 70 ? 'Good' : 'Action Required'}
+                </p>
+              </div>
+              <div className="section-bg p-3">
+                <p className="text-[10px] font-bold text-charcoal-muted uppercase mb-1 tracking-wider">Passed Tests</p>
+                <p className="text-sm font-bold text-charcoal">{passedLabs} / {totalLabs}</p>
               </div>
             </div>
           </div>
-          <h2 className="text-2xl font-bold text-charcoal tracking-tight">Health Certificate</h2>
-          <p className="text-sm text-charcoal-muted font-medium mt-1">Verified Hardware Scan • {new Date().toLocaleDateString()}</p>
-        </div>
 
-        <div className="p-6">
-          <div className="grid grid-cols-2 gap-4 mb-8">
-            <div className="section-bg p-3">
-              <p className="text-[10px] font-bold text-charcoal-muted uppercase mb-1 tracking-wider">Status</p>
-              <p className={`text-sm font-bold ${score >= 90 ? 'text-emerald-pass' : 'text-p4l-red'}`}>
-                {score >= 90 ? 'Excellent' : score >= 70 ? 'Good' : 'Action Required'}
-              </p>
-            </div>
-            <div className="section-bg p-3">
-              <p className="text-[10px] font-bold text-charcoal-muted uppercase mb-1 tracking-wider">Passed Tests</p>
-              <p className="text-sm font-bold text-charcoal">{passedLabs} / {totalLabs}</p>
-            </div>
-          </div>
-
-          <h3 className="text-xs font-bold text-charcoal-muted uppercase tracking-widest mb-4">Detailed Report</h3>
-          <div className="space-y-2">
-            {details.map((lab) => (
-              <div key={lab.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/50">
-                <div className="flex items-center gap-3">
-                  <span className="text-p4l-red">{lab.icon}</span>
+          {/* Detailed report — right panel on desktop */}
+          <div className="p-6 lg:w-3/5">
+            <h3 className="text-xs font-bold text-charcoal-muted uppercase tracking-widest mb-4">Detailed Report</h3>
+            <div className="space-y-2">
+              {details.map((lab) => (
+                <div key={lab.id} className="flex items-center justify-between p-3 rounded-xl border border-slate-100 bg-slate-50/50">
+                  <div className="flex items-center gap-3">
+                    <span className="text-p4l-red">{lab.icon}</span>
+                    <div>
+                      <span className="text-sm font-semibold text-charcoal">{lab.label}</span>
+                      {renderDetailText(lab.id, lab.result)}
+                    </div>
+                  </div>
                   <div>
-                    <span className="text-sm font-semibold text-charcoal">{lab.label}</span>
-                    {renderDetailText(lab.id, lab.result)}
+                    {lab.status === 'pass' ? (
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-pass bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-wider">
+                        Pass
+                      </span>
+                    ) : lab.status === 'fail' ? (
+                      <span className="flex items-center gap-1 text-[10px] font-bold text-p4l-red bg-red-50 px-2 py-1 rounded-full uppercase tracking-wider">
+                        Fail
+                      </span>
+                    ) : (
+                      <span className="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-full uppercase tracking-wider">
+                        {lab.status}
+                      </span>
+                    )}
                   </div>
                 </div>
-                <div>
-                  {lab.status === 'pass' ? (
-                    <span className="flex items-center gap-1 text-[10px] font-bold text-emerald-pass bg-emerald-50 px-2 py-1 rounded-full uppercase tracking-wider">
-                      Pass
-                    </span>
-                  ) : lab.status === 'fail' ? (
-                    <span className="flex items-center gap-1 text-[10px] font-bold text-p4l-red bg-red-50 px-2 py-1 rounded-full uppercase tracking-wider">
-                      Fail
-                    </span>
-                  ) : (
-                    <span className="text-[9px] font-bold text-slate-400 bg-slate-100 px-2 py-1 rounded-full uppercase tracking-wider">
-                      {lab.status}
-                    </span>
-                  )}
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 

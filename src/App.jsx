@@ -94,7 +94,7 @@ export default function App() {
     <div className="min-h-screen bg-white pb-8">
       {/* Header */}
       <div className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-100">
-        <div className="max-w-lg mx-auto px-4 pt-3 pb-2">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 pt-3 pb-2">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-p4l-red rounded-lg flex items-center justify-center shadow-sm">
@@ -113,7 +113,7 @@ export default function App() {
         </div>
       </div>
 
-      <div className="max-w-lg mx-auto px-4 pt-5">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 pt-5">
         {/* SCAN STEP */}
         {step === 'scan' && (
           <div className="space-y-4">
@@ -122,15 +122,17 @@ export default function App() {
               <p className="text-sm text-charcoal-muted mt-1">Automatically detecting your device hardware.</p>
             </div>
 
-            <DeviceContext onResult={(r) => setResult('deviceContext', r)} />
-            <CameraInventory onResult={(r) => setResult('cameras', r)} />
-            <BatteryLab onResult={(r) => setResult('battery', r)} />
-            <RefreshRate onResult={(r) => setResult('refreshRate', r)} />
-            <IMEIVerification key={`imei-${resetKeys.imei}`} onResult={(r) => setResult('imei', r)} />
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <DeviceContext onResult={(r) => setResult('deviceContext', r)} />
+              <CameraInventory onResult={(r) => setResult('cameras', r)} />
+              <BatteryLab onResult={(r) => setResult('battery', r)} />
+              <RefreshRate onResult={(r) => setResult('refreshRate', r)} />
+              <IMEIVerification key={`imei-${resetKeys.imei}`} onResult={(r) => setResult('imei', r)} />
+            </div>
 
             {scanComplete && (
               <div className="pt-4 animate-fade-in">
-                <button onClick={handleScanComplete} className="btn-primary">
+                <button onClick={handleScanComplete} className="btn-primary md:w-auto md:px-10">
                   Continue to Verification →
                 </button>
               </div>
@@ -146,15 +148,17 @@ export default function App() {
               <p className="text-sm text-charcoal-muted mt-1">Test each component to verify functionality.</p>
             </div>
 
-            <AudioSpectrum key={`audio-${resetKeys.audio}`} onResult={(r) => setResult('audio', r)} onRedo={() => handleRedo('audio')} />
-            <OrientationLab key={`orientation-${resetKeys.orientation}`} onResult={(r) => setResult('orientation', r)} onRedo={() => handleRedo('orientation')} />
-            <FlashlightToggle key={`flashlight-${resetKeys.flashlight}`} onResult={(r) => setResult('flashlight', r)} onRedo={() => handleRedo('flashlight')} />
-            <TouchZoneMap key={`touchZone-${resetKeys.touchZone}`} onResult={(r) => setResult('touchZone', r)} onRedo={() => handleRedo('touchZone')} />
-            <MultiTouch key={`multiTouch-${resetKeys.multiTouch}`} onResult={(r) => setResult('multiTouch', r)} onRedo={() => handleRedo('multiTouch')} />
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <AudioSpectrum key={`audio-${resetKeys.audio}`} onResult={(r) => setResult('audio', r)} onRedo={() => handleRedo('audio')} />
+              <OrientationLab key={`orientation-${resetKeys.orientation}`} onResult={(r) => setResult('orientation', r)} onRedo={() => handleRedo('orientation')} />
+              <FlashlightToggle key={`flashlight-${resetKeys.flashlight}`} onResult={(r) => setResult('flashlight', r)} onRedo={() => handleRedo('flashlight')} />
+              <TouchZoneMap key={`touchZone-${resetKeys.touchZone}`} onResult={(r) => setResult('touchZone', r)} onRedo={() => handleRedo('touchZone')} />
+              <MultiTouch key={`multiTouch-${resetKeys.multiTouch}`} onResult={(r) => setResult('multiTouch', r)} onRedo={() => handleRedo('multiTouch')} />
+            </div>
 
             {verifyComplete && (
               <div className="pt-4 animate-fade-in">
-                <button onClick={handleVerifyComplete} className="btn-primary">
+                <button onClick={handleVerifyComplete} className="btn-primary md:w-auto md:px-10">
                   View Health Report →
                 </button>
               </div>

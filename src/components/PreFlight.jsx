@@ -30,10 +30,23 @@ export default function PreFlight({ onGranted }) {
   }, [onGranted]);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col items-center justify-center px-6">
+    <div className="min-h-screen bg-white flex flex-col lg:flex-row">
+      {/* Left hero panel — desktop only */}
+      <div className="hidden lg:flex flex-col items-center justify-center w-1/2 bg-slate-50 border-r border-slate-100 p-16 sticky top-0 min-h-screen">
+        <div className="w-28 h-28 bg-p4l-red rounded-3xl flex items-center justify-center mb-10 shadow-xl shadow-p4l-red/20">
+          <img src={eandLogo} alt="e&" className="w-20 h-20 object-contain" />
+        </div>
+        <h2 className="text-4xl font-bold text-charcoal mb-4 text-center">Device Diagnostic</h2>
+        <p className="text-charcoal/60 text-center max-w-md text-base leading-relaxed">
+          Comprehensive hardware verification to ensure your device is protected and performing at its best.
+        </p>
+      </div>
+
+      {/* Right form panel */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-12 lg:overflow-y-auto">
       <div className="w-full max-w-sm text-center">
-        {/* Brand mark */}
-        <div className="mx-auto w-16 h-16 bg-p4l-red rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-p4l-red/20 animate-fade-in">
+        {/* Brand mark — mobile only */}
+        <div className="lg:hidden mx-auto w-16 h-16 bg-p4l-red rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-p4l-red/20 animate-fade-in">
           <img src={eandLogo} alt="e&" className="w-10 h-10 object-contain" />
         </div>
 
@@ -127,6 +140,7 @@ export default function PreFlight({ onGranted }) {
           <p className="text-[10px] text-charcoal/40 uppercase tracking-widest font-semibold">Powered by</p>
           <img src={p4lLogo} alt="Protect4Less" className="h-5 object-contain" />
         </div>
+      </div>
       </div>
     </div>
   );
