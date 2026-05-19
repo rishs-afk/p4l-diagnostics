@@ -1,4 +1,5 @@
 import { useState, useReducer, useCallback } from 'react';
+import eandLogo from './assets/eand-logo-white.svg';
 import PreFlight from './components/PreFlight';
 import Stepper from './components/Stepper';
 import LabCard from './components/LabCard';
@@ -97,9 +98,7 @@ export default function App() {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-p4l-red rounded-lg flex items-center justify-center shadow-sm">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
+                <img src={eandLogo} alt="e&" className="w-5 h-5 object-contain" />
               </div>
               <span className="font-bold text-sm text-charcoal tracking-tight uppercase">P4L Diagnostic Lab</span>
             </div>

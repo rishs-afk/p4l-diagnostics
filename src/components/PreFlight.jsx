@@ -1,4 +1,6 @@
 import { useState, useCallback } from 'react';
+import eandLogo from '../assets/eand-logo-white.svg';
+import p4lLogo from '../assets/p4l-logo.png';
 
 export default function PreFlight({ onGranted }) {
   const [loading, setLoading] = useState(false);
@@ -32,9 +34,7 @@ export default function PreFlight({ onGranted }) {
       <div className="w-full max-w-sm text-center">
         {/* Brand mark */}
         <div className="mx-auto w-16 h-16 bg-p4l-red rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-p4l-red/20 animate-fade-in">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-          </svg>
+          <img src={eandLogo} alt="e&" className="w-10 h-10 object-contain" />
         </div>
 
         <h1 className="text-2xl font-bold text-charcoal mb-2 animate-slide-up">
@@ -122,6 +122,11 @@ export default function PreFlight({ onGranted }) {
             'Begin Diagnostic'
           )}
         </button>
+
+        <div className="mt-8 flex flex-col items-center gap-2 animate-fade-in" style={{ animationDelay: '0.25s' }}>
+          <p className="text-[10px] text-charcoal/40 uppercase tracking-widest font-semibold">Powered by</p>
+          <img src={p4lLogo} alt="Protect4Less" className="h-5 object-contain opacity-50" />
+        </div>
       </div>
     </div>
   );
