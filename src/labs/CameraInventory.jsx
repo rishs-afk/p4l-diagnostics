@@ -146,9 +146,9 @@ export default function CameraInventory({ onResult }) {
               <button 
                 onClick={() => startTest(cam)}
                 className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
-                  cam.verified === true ? 'bg-emerald-100 text-emerald-pass' :
-                  cam.verified === false ? 'bg-red-100 text-p4l-red' :
-                  'bg-slate-200 text-charcoal active:scale-95'
+                  cam.verified === true ? 'bg-emerald-500/15 text-emerald-400' :
+                  cam.verified === false ? 'bg-red-500/15 text-red-400' :
+                  'bg-white/10 text-white/60 active:scale-95'
                 }`}
               >
                 {cam.verified === true ? 'Verified' : cam.verified === false ? 'Failed' : 'Verify'}

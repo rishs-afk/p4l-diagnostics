@@ -94,8 +94,8 @@ export default function App() {
     <div className="min-h-screen bg-[#0d0d0d] relative overflow-hidden pb-8">
       {/* Background orbs */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-p4l-red rounded-full blur-[120px] opacity-25" />
-        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-p4l-red rounded-full blur-[120px] opacity-20" />
+        <div className="absolute -top-32 -left-32 w-[600px] h-[600px] bg-p4l-red rounded-full blur-[160px] opacity-50" />
+        <div className="absolute -bottom-32 -right-32 w-[600px] h-[600px] bg-p4l-red rounded-full blur-[160px] opacity-40" />
       </div>
       {/* Header */}
       <div className="sticky top-0 z-50 bg-black/30 backdrop-blur-xl border-b border-white/10">

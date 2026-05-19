@@ -107,7 +107,7 @@ export default function FlashlightToggle({ onResult, onRedo }) {
             className={`w-full py-6 rounded-xl text-center transition-all duration-300 border-2 ${
               torchOn
                 ? 'bg-amber-50 border-amber-300 text-amber-700 opacity-80'
-                : 'bg-slate-50 border-slate-200 text-charcoal active:scale-95'
+                : 'bg-white/5 border-white/15 text-white/70 active:scale-95'
             }`}
             id="flashlight-test-btn"
           >
@@ -131,7 +131,7 @@ export default function FlashlightToggle({ onResult, onRedo }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : result.status === 'fail' ? '!bg-red-50' : ''}`}>
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-500/15' : result.status === 'fail' ? '!bg-red-500/15' : ''}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass' ? '✓ Flashlight working' : result.status === 'fail' ? '✗ Flashlight issue' : '— Torch not available'}
           </p>

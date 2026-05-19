@@ -91,7 +91,7 @@ export default function IMEIVerification({ onResult }) {
             <p className="text-xs text-charcoal-muted mb-4">Screenshot the result and upload it here.</p>
             <button 
               onClick={() => fileInputRef.current?.click()}
-              className="bg-charcoal text-white text-xs font-bold px-4 py-2 rounded-xl shadow-lg active:scale-95 transition-transform"
+              className="bg-p4l-red text-white text-xs font-bold px-4 py-2 rounded-xl active:scale-95 transition-transform hover:bg-p4l-red-dark"
             >
               Upload Screenshot
             </button>
@@ -115,7 +115,7 @@ export default function IMEIVerification({ onResult }) {
             <div className="absolute left-0 right-0 h-1 bg-p4l-red shadow-[0_0_10px_2px_rgba(255,59,48,0.5)] animate-scan-line"></div>
             
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xs font-bold uppercase tracking-widest text-charcoal animate-pulse drop-shadow-sm bg-white/70 px-2 py-1 rounded-md">Scanning...</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-white animate-pulse bg-black/50 px-2 py-1 rounded-md">Scanning...</span>
             </div>
             <style>{`
               @keyframes scan-line {
@@ -132,7 +132,7 @@ export default function IMEIVerification({ onResult }) {
 
         {status === 'pass' && (
           <div className="flex flex-col items-center justify-center p-4">
-            <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
+            <div className="w-12 h-12 rounded-full bg-emerald-500/15 flex items-center justify-center mb-3 shadow-[0_0_20px_rgba(16,185,129,0.2)]">
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                 <polyline points="22 4 12 14.01 9 11.01"></polyline>
@@ -145,7 +145,7 @@ export default function IMEIVerification({ onResult }) {
 
         {status === 'fail' && (
           <div className="flex flex-col items-center justify-center p-4">
-            <div className="w-10 h-10 rounded-full bg-red-50 flex items-center justify-center mb-3">
+            <div className="w-10 h-10 rounded-full bg-red-500/15 flex items-center justify-center mb-3">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="12" cy="12" r="10"></circle>
                 <line x1="15" y1="9" x2="9" y2="15"></line>
@@ -161,10 +161,10 @@ export default function IMEIVerification({ onResult }) {
                 value={manualImei} 
                 onChange={(e) => setManualImei(e.target.value.replace(/\D/g, '').slice(0, 15))}
                 placeholder="15-digit IMEI" 
-                className="w-full text-xs p-2 rounded-lg border border-slate-200 focus:outline-none focus:border-charcoal font-mono"
+                className="w-full text-xs p-2 rounded-lg bg-white/10 border border-white/15 text-white placeholder-white/30 focus:outline-none focus:border-white/40 font-mono"
                 maxLength={15}
               />
-              <button type="submit" className="bg-charcoal text-white px-3 py-2 rounded-lg text-xs font-bold">
+              <button type="submit" className="bg-p4l-red text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-p4l-red-dark">
                 Verify
               </button>
             </form>

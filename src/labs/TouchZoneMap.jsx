@@ -119,7 +119,7 @@ export default function TouchZoneMap({ onResult, onRedo }) {
             </div>
             
             {/* Floating controls */}
-            <div className="absolute top-10 left-1/2 -translate-x-1/2 px-4 py-2 bg-charcoal/80 backdrop-blur-md rounded-full pointer-events-none shadow-lg border border-white/10 flex items-center gap-3">
+            <div className="absolute top-10 left-1/2 -translate-x-1/2 px-4 py-2 bg-black/80 backdrop-blur-md rounded-full pointer-events-none shadow-lg border border-white/10 flex items-center gap-3">
               <div className="w-2 h-2 rounded-full bg-p4l-red animate-pulse" />
               <p className="text-[10px] text-white font-bold uppercase tracking-widest whitespace-nowrap">
                 Swipe Entire Screen ({progress}%)
@@ -142,7 +142,7 @@ export default function TouchZoneMap({ onResult, onRedo }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-500/15' : '!bg-red-500/15'}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass'
               ? `✓ All touch zones responsive (${result.zonesHit}/${result.total})`

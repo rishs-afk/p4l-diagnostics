@@ -174,11 +174,11 @@ export default function OrientationLab({ onResult, onRedo }) {
 
       {state === 'testing' && !result && (
         <div className="space-y-3">
-          <div className="section-bg relative overflow-hidden bg-slate-50 border border-slate-100" style={{ height: '180px' }}>
+          <div className="section-bg relative overflow-hidden" style={{ height: '180px' }}>
             {/* Target Area */}
             <div
               className={`absolute w-14 h-14 rounded-full border-2 border-dashed transition-all duration-300 ${
-                inTarget ? 'border-emerald-pass bg-emerald-pass/20 scale-110' : 'border-slate-300'
+                inTarget ? 'border-emerald-400 bg-emerald-400/20 scale-110' : 'border-white/30'
               }`}
               style={{
                 left: `${TARGET.x}%`,
@@ -190,7 +190,7 @@ export default function OrientationLab({ onResult, onRedo }) {
                 {inTarget ? (
                   <span className="text-xs font-bold text-emerald-pass">{holdTime.toFixed(1)}s</span>
                 ) : (
-                  <div className="w-1 h-1 bg-slate-300 rounded-full" />
+                  <div className="w-1 h-1 bg-white/30 rounded-full" />
                 )}
               </div>
             </div>
@@ -224,7 +224,7 @@ export default function OrientationLab({ onResult, onRedo }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-500/15' : '!bg-red-500/15'}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass' ? '✓ Gyroscope responding correctly' : '✗ Orientation sensor issue'}
           </p>

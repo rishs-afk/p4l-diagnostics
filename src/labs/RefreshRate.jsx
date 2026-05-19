@@ -80,7 +80,7 @@ export default function RefreshRate({ onResult }) {
               <div
                 key={tier}
                 className={`w-3.5 h-full rounded-sm transition-all duration-500 ${
-                  hz >= tier ? 'bg-p4l-red' : 'bg-slate-200'
+                  hz >= tier ? 'bg-p4l-red' : 'bg-white/15'
                 }`}
               />
             ))}

@@ -188,7 +188,7 @@ export default function AudioSpectrum({ onResult, onRedo }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-500/15' : '!bg-red-500/15'}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass' ? '✓ Microphone working correctly' : '✗ Microphone issue detected'}
           </p>

@@ -145,7 +145,7 @@ export default function MultiTouch({ onResult, onRedo }) {
             
             {/* Floating Status Bar */}
             <div className="absolute top-10 left-4 right-4 flex justify-between items-start pointer-events-none">
-              <div className="bg-charcoal/90 backdrop-blur-md px-6 h-[72px] rounded-2xl border border-white/10 shadow-2xl flex items-center">
+              <div className="bg-black/80 backdrop-blur-md px-6 h-[72px] rounded-2xl border border-white/10 shadow-2xl flex items-center">
                 <h2 className="text-white font-bold text-lg">Multi-Touch</h2>
               </div>
               <div className="flex gap-2">
@@ -153,7 +153,7 @@ export default function MultiTouch({ onResult, onRedo }) {
                   <span className="text-white font-black text-xl leading-none">{touches.length}</span>
                   <span className="text-[8px] text-white/70 uppercase font-bold mt-1">Active</span>
                 </div>
-                <div className="bg-charcoal h-[72px] px-4 rounded-2xl shadow-xl flex flex-col items-center justify-center min-w-[72px]">
+                <div className="bg-black/80 h-[72px] px-4 rounded-2xl shadow-xl flex flex-col items-center justify-center min-w-[72px]">
                   <span className="text-white font-black text-xl leading-none">{maxTouches}</span>
                   <span className="text-[8px] text-slate-400 uppercase font-bold mt-1">Max</span>
                 </div>
@@ -162,8 +162,8 @@ export default function MultiTouch({ onResult, onRedo }) {
 
             {touches.length === 0 && (
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none animate-pulse">
-                  <div className="w-20 h-20 border-4 border-slate-200 border-dashed rounded-full mx-auto flex items-center justify-center">
-                    <div className="w-10 h-10 bg-slate-100 rounded-full" />
+                  <div className="w-20 h-20 border-4 border-white/20 border-dashed rounded-full mx-auto flex items-center justify-center">
+                    <div className="w-10 h-10 bg-white/10 rounded-full" />
                   </div>
               </div>
             )}
@@ -173,7 +173,7 @@ export default function MultiTouch({ onResult, onRedo }) {
               <button 
                 onClick={(e) => { e.stopPropagation(); handleResult(maxRef.current >= 2); }}
                 onTouchEnd={(e) => { e.preventDefault(); e.stopPropagation(); handleResult(maxRef.current >= 2); }}
-                className="w-full py-4 bg-charcoal text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2"
+                className="w-full py-4 bg-p4l-red text-white font-bold rounded-2xl shadow-lg active:scale-95 transition-transform flex items-center justify-center gap-2 hover:bg-p4l-red-dark"
               >
                 Finish Test
               </button>
@@ -184,7 +184,7 @@ export default function MultiTouch({ onResult, onRedo }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50' : '!bg-red-50'}`}>
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-500/15' : '!bg-red-500/15'}`}>
           <p className="text-sm font-medium">
             {result.status === 'pass'
               ? `✓ Multi-touch verified — detected up to ${result.maxTouches} points`

@@ -33,8 +33,8 @@ export default function PreFlight({ onGranted }) {
     <div className="min-h-screen bg-[#0d0d0d] flex flex-col lg:flex-row relative overflow-hidden">
       {/* Background orbs */}
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-[500px] h-[500px] bg-p4l-red rounded-full blur-[120px] opacity-25" />
-        <div className="absolute -bottom-32 -right-32 w-[500px] h-[500px] bg-p4l-red rounded-full blur-[120px] opacity-20" />
+        <div className="absolute -top-32 -left-32 w-[600px] h-[600px] bg-p4l-red rounded-full blur-[160px] opacity-50" />
+        <div className="absolute -bottom-32 -right-32 w-[600px] h-[600px] bg-p4l-red rounded-full blur-[160px] opacity-40" />
       </div>
       {/* Left hero panel — desktop only */}
       <div className="hidden lg:flex flex-col items-center justify-center w-1/2 bg-white/[0.04] backdrop-blur-xl border-r border-white/10 p-16 sticky top-0 min-h-screen">
