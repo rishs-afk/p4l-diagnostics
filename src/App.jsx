@@ -100,7 +100,7 @@ export default function App() {
               <div className="w-8 h-8 bg-p4l-red rounded-lg flex items-center justify-center shadow-sm">
                 <img src={eandLogo} alt="e&" className="w-5 h-5 object-contain" />
               </div>
-              <span className="font-bold text-sm text-charcoal tracking-tight uppercase">P4L Diagnostic Lab</span>
+              <span className="font-bold text-sm text-charcoal tracking-tight uppercase">Diagnostic Lab</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-pass animate-pulse"></div>
