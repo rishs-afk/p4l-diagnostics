@@ -137,7 +137,7 @@ export default function CameraInventory({ onResult }) {
                 <span className="text-p4l-red">{cam.icon}</span>
                 <div>
                   <p className="text-sm font-semibold text-charcoal">{cam.name}</p>
-                  <p className="text-[10px] text-charcoal/60 truncate max-w-[140px] font-medium">
+                  <p className="text-[10px] text-slate-500 truncate max-w-[140px] font-medium">
                     {cam.rawLabel || 'System Default'}
                   </p>
                 </div>
@@ -148,7 +148,7 @@ export default function CameraInventory({ onResult }) {
                 className={`px-3 py-1.5 rounded-lg text-[11px] font-bold transition-all ${
                   cam.verified === true ? 'bg-emerald-500/15 text-emerald-400' :
                   cam.verified === false ? 'bg-red-500/15 text-red-400' :
-                  'bg-white/10 text-white/60 active:scale-95'
+                  'bg-slate-100 text-slate-600 active:scale-95'
                 }`}
               >
                 {cam.verified === true ? 'Verified' : cam.verified === false ? 'Failed' : 'Verify'}
@@ -156,14 +156,14 @@ export default function CameraInventory({ onResult }) {
             </div>
           ))}
           
-          <p className="text-[11px] text-charcoal/50 mt-2 font-medium">
+          <p className="text-[11px] text-slate-400 mt-2 font-medium">
             {cameras.filter(c => c.verified === true).length}/{cameras.length} lenses verified
           </p>
         </div>
       ) : error ? (
         <p className="text-xs text-p4l-red">{error}</p>
       ) : (
-        <p className="text-xs text-charcoal-muted">Scanning cameras...</p>
+        <p className="text-xs text-slate-500">Scanning cameras...</p>
       )}
 
       {/* Camera Verification Overlay */}
@@ -185,7 +185,7 @@ export default function CameraInventory({ onResult }) {
           <div className="absolute bottom-10 left-6 right-6 flex flex-col gap-3">
             <button 
               onClick={() => stopTest(true)}
-              className="w-full py-4 bg-white text-charcoal font-bold rounded-2xl shadow-xl active:scale-[0.98] transition-transform"
+              className="w-full py-4 bg-white text-slate-900 font-bold rounded-2xl shadow-xl active:scale-[0.98] transition-transform"
             >
               Finish Verification
             </button>

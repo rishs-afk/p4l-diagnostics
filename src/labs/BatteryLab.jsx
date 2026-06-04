@@ -57,7 +57,7 @@ export default function BatteryLab({ onResult }) {
 
   const levelColor = battery
     ? battery.level > 50 ? 'bg-emerald-pass' : battery.level > 20 ? 'bg-amber-500' : 'bg-p4l-red'
-    : 'bg-white/10';
+    : 'bg-slate-200';
 
   const Icon = () => (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -76,8 +76,8 @@ export default function BatteryLab({ onResult }) {
       {battery ? (
         <div className="section-bg flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold text-charcoal">{battery.level}%</p>
-            <p className="text-xs text-charcoal/70 flex items-center gap-1">
+            <p className="text-2xl font-bold text-slate-900">{battery.level}%</p>
+            <p className="text-xs text-slate-500 flex items-center gap-1">
               {battery.charging ? (
                 <>
                   <svg className="w-3 h-3 text-emerald-pass" fill="currentColor" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -87,8 +87,8 @@ export default function BatteryLab({ onResult }) {
             </p>
           </div>
           {/* Battery visual */}
-          <div className="relative w-12 h-6 border-2 border-white/25 rounded-md flex-shrink-0">
-            <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-[2px] h-2.5 bg-white/25 rounded-r" />
+          <div className="relative w-12 h-6 border-2 border-slate-300 rounded-md flex-shrink-0">
+            <div className="absolute right-[-4px] top-1/2 -translate-y-1/2 w-[2px] h-2.5 bg-slate-300 rounded-r" />
             <div
               className={`h-full rounded-sm transition-all duration-500 ${levelColor}`}
               style={{ width: `${battery.level}%` }}
@@ -97,10 +97,10 @@ export default function BatteryLab({ onResult }) {
         </div>
       ) : !supported ? (
         <div className="section-bg">
-          <p className="text-xs text-charcoal-muted">Battery API is not supported on this browser. This is expected on iOS Safari.</p>
+          <p className="text-xs text-slate-500">Battery API is not supported on this browser. This is expected on iOS Safari.</p>
         </div>
       ) : (
-        <p className="text-xs text-charcoal-muted">Checking battery...</p>
+        <p className="text-xs text-slate-500">Checking battery...</p>
       )}
     </LabCard>
   );

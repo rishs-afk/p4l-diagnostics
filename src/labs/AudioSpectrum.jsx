@@ -165,7 +165,7 @@ export default function AudioSpectrum({ onResult, onRedo }) {
     >
       {state === 'idle' && (
         <div className="space-y-3">
-          <p className="text-xs text-charcoal-muted font-medium">Speak or play audio to test your microphone input.</p>
+          <p className="text-xs text-slate-500 font-medium">Speak or play audio to test your microphone input.</p>
           <button onClick={startListening} className="btn-primary" id="audio-start-btn">
             Start Microphone Test
           </button>
@@ -181,15 +181,15 @@ export default function AudioSpectrum({ onResult, onRedo }) {
               style={{ display: 'block' }}
             />
           </div>
-          <p className="text-xs text-charcoal-muted text-center">
+          <p className="text-xs text-slate-500 text-center">
             {hasSignal ? '✓ Audio signal detected — completing test...' : 'Listening... speak into your microphone'}
           </p>
         </div>
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-500/15' : '!bg-red-500/15'}`}>
-          <p className="text-sm font-medium">
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50 border-emerald-200' : '!bg-red-50 border-red-200'}`}>
+          <p className={`text-sm font-medium ${result.status === 'pass' ? 'text-emerald-700' : 'text-red-600'}`}>
             {result.status === 'pass' ? '✓ Microphone working correctly' : '✗ Microphone issue detected'}
           </p>
         </div>

@@ -1,5 +1,4 @@
 import { useState, useCallback, useRef } from 'react';
-import Tesseract from 'tesseract.js';
 import LabCard from '../components/LabCard';
 
 const isValidIMEI = (imei) => {
@@ -22,38 +21,9 @@ export default function IMEIVerification({ onResult }) {
   const fileInputRef = useRef(null);
 
   const processImage = useCallback(async (file) => {
-    setStatus('scanning');
     const objectUrl = URL.createObjectURL(file);
     setPreview(objectUrl);
-
-    try {
-      const result = await Tesseract.recognize(objectUrl, 'eng', {
-        logger: m => console.log(m)
-      });
-      const text = result.data.text;
-      const matches = text.match(/\b\d{15}\b/g);
-
-      let foundValidImei = null;
-      if (matches) {
-        for (const match of matches) {
-          if (isValidIMEI(match)) {
-            foundValidImei = match;
-            break;
-          }
-        }
-      }
-
-      if (foundValidImei) {
-        setImei(foundValidImei);
-        setStatus('pass');
-        onResult({ status: 'pass', imei: foundValidImei });
-      } else {
-        setStatus('fail');
-      }
-    } catch (error) {
-      console.error('OCR Error:', error);
-      setStatus('fail');
-    }
+    setStatus('fail');
   }, [onResult]);
 
   const handleFileChange = (e) => {
@@ -88,7 +58,7 @@ export default function IMEIVerification({ onResult }) {
         {status === 'idle' && (
           <div className="flex flex-col items-center justify-center p-4 text-center">
             <p className="text-sm font-semibold text-charcoal mb-2">Dial *#06#</p>
-            <p className="text-xs text-charcoal-muted mb-4">Screenshot the result and upload it here.</p>
+            <p className="text-xs text-slate-500 mb-4">Upload a screenshot, then enter the IMEI manually.</p>
             <button 
               onClick={() => fileInputRef.current?.click()}
               className="bg-p4l-red text-white text-xs font-bold px-4 py-2 rounded-xl active:scale-95 transition-transform hover:bg-p4l-red-dark"
@@ -115,7 +85,7 @@ export default function IMEIVerification({ onResult }) {
             <div className="absolute left-0 right-0 h-1 bg-p4l-red shadow-[0_0_10px_2px_rgba(255,59,48,0.5)] animate-scan-line"></div>
             
             <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-xs font-bold uppercase tracking-widest text-white animate-pulse bg-black/50 px-2 py-1 rounded-md">Scanning...</span>
+              <span className="text-xs font-bold uppercase tracking-widest text-white animate-pulse bg-black/50 px-2 py-1 rounded-md">Preview loaded</span>
             </div>
             <style>{`
               @keyframes scan-line {
@@ -152,8 +122,8 @@ export default function IMEIVerification({ onResult }) {
                 <line x1="9" y1="9" x2="15" y2="15"></line>
               </svg>
             </div>
-            <p className="text-xs font-bold text-p4l-red mb-2">Deep Scan Failed</p>
-            <p className="text-[10px] text-charcoal-muted mb-4 text-center">We couldn't detect a valid 15-digit IMEI. Please enter it manually.</p>
+            <p className="text-xs font-bold text-p4l-red mb-2">Manual Verification</p>
+            <p className="text-[10px] text-slate-500 mb-4 text-center">Enter a valid 15-digit IMEI to complete the test.</p>
             
             <form onSubmit={handleManualSubmit} className="flex gap-2 w-full max-w-[200px]">
               <input 
@@ -161,7 +131,7 @@ export default function IMEIVerification({ onResult }) {
                 value={manualImei} 
                 onChange={(e) => setManualImei(e.target.value.replace(/\D/g, '').slice(0, 15))}
                 placeholder="15-digit IMEI" 
-                className="w-full text-xs p-2 rounded-lg bg-white/10 border border-white/15 text-white placeholder-white/30 focus:outline-none focus:border-white/40 font-mono"
+                className="w-full text-xs p-2 rounded-lg bg-slate-50 border border-slate-200 text-slate-900 placeholder-slate-400 focus:outline-none focus:border-p4l-red focus:ring-1 focus:ring-p4l-red/20 font-mono"
                 maxLength={15}
               />
               <button type="submit" className="bg-p4l-red text-white px-3 py-2 rounded-lg text-xs font-bold hover:bg-p4l-red-dark">

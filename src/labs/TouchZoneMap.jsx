@@ -86,7 +86,7 @@ export default function TouchZoneMap({ onResult, onRedo }) {
     >
       {state === 'idle' && (
         <div className="space-y-3">
-          <p className="text-xs text-charcoal-muted font-medium">Full-screen edge-to-edge test to verify the entire digitizer surface.</p>
+          <p className="text-xs text-slate-500 font-medium">Full-screen edge-to-edge test to verify the entire digitizer surface.</p>
           <button onClick={startTest} className="btn-primary" id="touchzone-start-btn">
             Start Touch Test
           </button>
@@ -142,8 +142,8 @@ export default function TouchZoneMap({ onResult, onRedo }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-500/15' : '!bg-red-500/15'}`}>
-          <p className="text-sm font-medium">
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50 border-emerald-200' : '!bg-red-50 border-red-200'}`}>
+          <p className={`text-sm font-medium ${result.status === 'pass' ? 'text-emerald-700' : 'text-red-600'}`}>
             {result.status === 'pass'
               ? `✓ All touch zones responsive (${result.zonesHit}/${result.total})`
               : `✗ ${result.zonesHit}/${result.total} zones detected — some areas unresponsive`}

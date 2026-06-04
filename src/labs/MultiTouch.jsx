@@ -124,7 +124,7 @@ export default function MultiTouch({ onResult, onRedo }) {
     >
       {state === 'idle' && (
         <div className="space-y-3">
-          <p className="text-xs text-charcoal-muted font-medium">Verify multi-finger support by placing up to 10 points on the screen.</p>
+          <p className="text-xs text-slate-500 font-medium">Verify multi-finger support by placing up to 10 points on the screen.</p>
           <button onClick={startTest} className="btn-primary" id="multitouch-start-btn">
             Start Multi-Touch Test
           </button>
@@ -184,8 +184,8 @@ export default function MultiTouch({ onResult, onRedo }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-500/15' : '!bg-red-500/15'}`}>
-          <p className="text-sm font-medium">
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50 border-emerald-200' : '!bg-red-50 border-red-200'}`}>
+          <p className={`text-sm font-medium ${result.status === 'pass' ? 'text-emerald-700' : 'text-red-600'}`}>
             {result.status === 'pass'
               ? `✓ Multi-touch verified — detected up to ${result.maxTouches} points`
               : `✗ Multi-touch failed — detected ${result.maxTouches} points`}

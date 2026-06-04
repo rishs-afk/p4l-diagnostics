@@ -72,15 +72,15 @@ export default function RefreshRate({ onResult }) {
       {hz ? (
         <div className="section-bg flex items-center justify-between">
           <div>
-            <p className="text-2xl font-bold text-charcoal">{hz}<span className="text-sm font-medium text-charcoal/60 ml-1">Hz</span></p>
-            <p className="text-xs text-charcoal/70 font-medium">{hzLabel} Display</p>
+            <p className="text-2xl font-bold text-slate-900">{hz}<span className="text-sm font-medium text-slate-400 ml-1">Hz</span></p>
+            <p className="text-xs text-slate-500 font-medium">{hzLabel} Display</p>
           </div>
           <div className="flex gap-1 items-end h-6">
             {[60, 90, 120].map((tier) => (
               <div
                 key={tier}
                 className={`w-3.5 h-full rounded-sm transition-all duration-500 ${
-                  hz >= tier ? 'bg-p4l-red' : 'bg-white/15'
+                  hz >= tier ? 'bg-p4l-red' : 'bg-slate-200'
                 }`}
               />
             ))}
@@ -89,7 +89,7 @@ export default function RefreshRate({ onResult }) {
       ) : (
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 rounded-full bg-p4l-red animate-pulse" />
-          <p className="text-xs text-charcoal-muted">Measuring panel frequency...</p>
+          <p className="text-xs text-slate-500">Measuring panel frequency...</p>
         </div>
       )}
     </LabCard>

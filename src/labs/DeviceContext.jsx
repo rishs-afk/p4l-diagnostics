@@ -213,14 +213,14 @@ export default function DeviceContext({ onResult }) {
               ['Cores', info.cores + ' CPU'],
             ].map(([label, value]) => (
               <div key={label}>
-                <p className="text-[10px] uppercase tracking-wider text-charcoal-muted font-bold">{label}</p>
-                <p className="text-sm font-semibold text-charcoal mt-0.5">{value}</p>
+                <p className="text-[10px] uppercase tracking-wider text-slate-400 font-bold">{label}</p>
+                <p className="text-sm font-semibold text-slate-900 mt-0.5">{value}</p>
               </div>
             ))}
           </div>
         </div>
       ) : (
-        <p className="text-xs text-charcoal-muted">Detecting device...</p>
+        <p className="text-xs text-slate-400">Detecting device...</p>
       )}
     </LabCard>
   );

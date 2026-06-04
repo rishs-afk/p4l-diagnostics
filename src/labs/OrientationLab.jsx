@@ -165,7 +165,7 @@ export default function OrientationLab({ onResult, onRedo }) {
     >
       {state === 'idle' && (
         <div className="space-y-3">
-          <p className="text-xs text-charcoal-muted font-medium">Tilt your device to move the marker into the target zone.</p>
+          <p className="text-xs text-slate-500 font-medium">Tilt your device to move the marker into the target zone.</p>
           <button onClick={startTest} className="btn-primary" id="orientation-start-btn">
             Start Tilt Test
           </button>
@@ -178,7 +178,7 @@ export default function OrientationLab({ onResult, onRedo }) {
             {/* Target Area */}
             <div
               className={`absolute w-14 h-14 rounded-full border-2 border-dashed transition-all duration-300 ${
-                inTarget ? 'border-emerald-400 bg-emerald-400/20 scale-110' : 'border-white/30'
+                inTarget ? 'border-emerald-500 bg-emerald-400/20 scale-110' : 'border-slate-300'
               }`}
               style={{
                 left: `${TARGET.x}%`,
@@ -190,7 +190,7 @@ export default function OrientationLab({ onResult, onRedo }) {
                 {inTarget ? (
                   <span className="text-xs font-bold text-emerald-pass">{holdTime.toFixed(1)}s</span>
                 ) : (
-                  <div className="w-1 h-1 bg-white/30 rounded-full" />
+                  <div className="w-1 h-1 bg-slate-400 rounded-full" />
                 )}
               </div>
             </div>
@@ -211,7 +211,7 @@ export default function OrientationLab({ onResult, onRedo }) {
           </div>
 
           <div className="flex items-center justify-between px-1">
-             <p className="text-[10px] text-charcoal-muted font-bold uppercase tracking-tight">
+             <p className="text-[10px] text-slate-500 font-bold uppercase tracking-tight">
                Tilt phone to reach target
              </p>
              <p className="text-[9px] text-slate-400 font-mono">
@@ -224,8 +224,8 @@ export default function OrientationLab({ onResult, onRedo }) {
       )}
 
       {state === 'done' && result && (
-        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-500/15' : '!bg-red-500/15'}`}>
-          <p className="text-sm font-medium">
+        <div className={`section-bg mt-4 ${result.status === 'pass' ? '!bg-emerald-50 border-emerald-200' : '!bg-red-50 border-red-200'}`}>
+          <p className={`text-sm font-medium ${result.status === 'pass' ? 'text-emerald-700' : 'text-red-600'}`}>
             {result.status === 'pass' ? '✓ Gyroscope responding correctly' : '✗ Orientation sensor issue'}
           </p>
         </div>
