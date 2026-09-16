@@ -69,35 +69,32 @@ export default function PreFlight({ onGranted, brand = {}, onBackHome }) {
   }, [onGranted]);
 
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute -top-32 -left-32 w-[600px] h-[600px] rounded-full blur-[160px] opacity-20 bg-p4l-red" />
-        <div className="absolute -bottom-40 -right-24 w-[500px] h-[500px] rounded-full blur-[180px] opacity-10 bg-[#0f172a]" />
-      </div>
+    <div className="min-h-screen bg-[#f3f6f8] relative overflow-hidden">
+      <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(135deg,#fff0f1_0%,#f7f9fc_48%,#edf7f3_100%)]" />
 
-      <div className="relative max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-12 py-6 lg:py-10 min-h-screen flex items-center">
-        <div className="w-full grid lg:grid-cols-[1.15fr_0.85fr] gap-6 lg:gap-8 items-center">
+      <div className="relative max-w-[1200px] mx-auto px-4 sm:px-8 lg:px-10 py-6 lg:py-8 min-h-screen flex items-center">
+        <div className="w-full grid lg:grid-cols-[minmax(0,1.08fr)_minmax(360px,0.72fr)] gap-7 lg:gap-12 xl:gap-16 items-center">
 
           {/* Left column */}
-          <div className="space-y-6 lg:space-y-8">
-            <div className="flex flex-col items-center text-center gap-4">
-              <div className={`w-20 h-20 sm:w-24 sm:h-24 rounded-3xl flex items-center justify-center shrink-0 ${
+          <div className="space-y-5 lg:space-y-6">
+            <div className="flex flex-col items-center text-center gap-4 lg:flex-row lg:text-left lg:gap-5">
+              <div className={`w-20 h-20 sm:w-24 sm:h-24 lg:w-[88px] lg:h-[88px] rounded-3xl flex items-center justify-center shrink-0 ${
                 mergedBrand.logoDark
                   ? 'bg-slate-900'
                   : 'bg-white border border-slate-200 shadow-[0_18px_45px_rgba(15,23,42,0.08)]'
               }`}>
                 <img src={mergedBrand.logoSrc} alt={mergedBrand.logoAlt} className="w-12 h-12 sm:w-14 sm:h-14 object-contain" />
               </div>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight text-slate-950 leading-tight">
+              <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-black text-slate-950 leading-none">
                 {mergedBrand.preflightTitle}
               </h1>
             </div>
 
-            <div className="rounded-[1.75rem] border border-white/80 bg-white/70 backdrop-blur-xl shadow-[0_4px_24px_rgba(15,23,42,0.07)] p-5 sm:p-6">
-              <p className="text-[10px] font-bold uppercase tracking-[0.28em] text-slate-400 mb-4">What we'll check</p>
-              <div className="grid gap-3 sm:grid-cols-2">
+            <div className="rounded-3xl border border-white/70 bg-white/45 backdrop-blur-2xl shadow-[0_20px_60px_rgba(15,23,42,0.10)] ring-1 ring-slate-900/5 p-5 sm:p-6">
+              <p className="text-[10px] font-bold uppercase text-slate-500 mb-2">What we'll check</p>
+              <div className="grid gap-x-8 gap-y-1 sm:grid-cols-2">
                 {checks.map((item) => (
-                  <div key={item.label} className="flex items-start gap-3 rounded-2xl border border-white/70 bg-white/50 backdrop-blur-sm px-4 py-4">
+                  <div key={item.label} className="min-w-0 flex items-start gap-3 border-t border-white/70 px-2 py-4">
                     {item.iconName ? (
                       <span className="text-slate-500 shrink-0 mt-0.5">{Icons[item.iconName]}</span>
                     ) : (
@@ -114,14 +111,14 @@ export default function PreFlight({ onGranted, brand = {}, onBackHome }) {
           </div>
 
           {/* Right column */}
-          <div className="w-full max-w-xl lg:justify-self-end">
-            <div className="rounded-[2rem] border border-white/80 bg-white/70 backdrop-blur-xl shadow-[0_4px_24px_rgba(15,23,42,0.07)] p-5 sm:p-6 space-y-4">
+          <div className="w-full max-w-[480px] lg:justify-self-end">
+            <div className="rounded-3xl border border-white/70 bg-white/45 backdrop-blur-2xl shadow-[0_20px_60px_rgba(15,23,42,0.10)] ring-1 ring-slate-900/5 p-5 sm:p-6 lg:p-7 space-y-5">
               {onBackHome && (
                 <div className="flex justify-end lg:hidden">
                   <button
                     type="button"
                     onClick={onBackHome}
-                    className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.25em] text-slate-600 hover:bg-slate-50"
+                    className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[10px] font-bold uppercase text-slate-600 hover:bg-slate-50"
                   >
                     Back
                   </button>
@@ -137,7 +134,7 @@ export default function PreFlight({ onGranted, brand = {}, onBackHome }) {
               <button
                 onClick={requestPermissions}
                 disabled={loading}
-                className="w-full py-4 px-6 bg-p4l-red text-white font-semibold text-base rounded-2xl transition-all duration-200 ease-in-out active:scale-[0.97] hover:bg-p4l-red-dark focus:outline-none focus:ring-2 focus:ring-p4l-red/30 disabled:opacity-60"
+                className="w-full py-4 px-6 bg-[#e6001f] text-white font-semibold text-base rounded-xl shadow-[0_10px_30px_rgba(230,0,31,0.22)] transition-all duration-200 ease-in-out active:scale-[0.98] hover:bg-[#c9001a] focus:outline-none focus:ring-2 focus:ring-[#e6001f]/30 disabled:opacity-60"
                 id="begin-scan-btn"
               >
                 {loading ? (
@@ -163,8 +160,8 @@ export default function PreFlight({ onGranted, brand = {}, onBackHome }) {
               </div>
             </div>
 
-            <div className="mt-8 text-center lg:text-right">
-              <p className="text-[10px] text-slate-400 uppercase tracking-widest font-semibold">{mergedBrand.poweredByLabel}</p>
+            <div className="mt-6 text-center lg:text-right">
+              <p className="text-[10px] text-slate-400 uppercase font-semibold">{mergedBrand.poweredByLabel}</p>
               <img src={p4lLogo} alt="Protect4Less" className="h-5 object-contain mx-auto lg:ml-auto mt-1" />
             </div>
           </div>
