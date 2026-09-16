@@ -136,8 +136,18 @@ export default function HealthCertificate({
         }
       });
       const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF({ orientation: 'portrait', unit: 'px', format: [canvas.width / 2, canvas.height / 2] });
-      pdf.addImage(imgData, 'PNG', 0, 0, canvas.width / 2, canvas.height / 2);
+      const pdf = new jsPDF({ orientation: 'portrait', unit: 'pt', format: 'a4' });
+      const pageWidth = pdf.internal.pageSize.getWidth();
+      const pageHeight = pdf.internal.pageSize.getHeight();
+      const margin = 24;
+      const availableWidth = pageWidth - margin * 2;
+      const availableHeight = pageHeight - margin * 2;
+      const widthScale = availableWidth / canvas.width;
+      const heightScale = availableHeight / canvas.height;
+      const scale = Math.min(widthScale, heightScale);
+      const imageWidth = canvas.width * scale;
+      const imageHeight = canvas.height * scale;
+      pdf.addImage(imgData, 'PNG', (pageWidth - imageWidth) / 2, margin, imageWidth, imageHeight);
       pdf.save(`${pdfPrefix}-${new Date().getTime()}.pdf`);
     } catch (error) {
       console.error('PDF Export failed:', error);
@@ -149,8 +159,8 @@ export default function HealthCertificate({
   const dashOffset = 283 - (283 * score) / 100;
 
   return (
-    <div className="animate-fade-in pb-12">
-      <div ref={certificateRef} className="bg-white/70 backdrop-blur-xl rounded-[1.75rem] border border-white/80 shadow-[0_4px_24px_rgba(15,23,42,0.07)] overflow-hidden">
+    <div className="animate-fade-in pb-12 max-w-[1080px] mx-auto">
+      <div ref={certificateRef} className="w-full bg-white/70 backdrop-blur-xl rounded-[1.75rem] border border-white/80 shadow-[0_4px_24px_rgba(15,23,42,0.07)] overflow-hidden">
         <div className="lg:flex">
           {/* Score + summary */}
           <div className="bg-white/40 px-6 py-8 text-center border-b lg:border-b-0 lg:border-r border-white/70 lg:w-2/5 lg:flex lg:flex-col lg:items-center lg:justify-center">

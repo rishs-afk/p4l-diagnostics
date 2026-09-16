@@ -222,6 +222,27 @@ const initialResults = {
   imei: null,
 };
 
+function getLabLayout(count) {
+  if (count <= 1) {
+    return {
+      contentClass: 'max-w-[540px] mx-auto',
+      gridClass: 'grid grid-cols-1 gap-4 max-w-[540px] mx-auto',
+    };
+  }
+
+  if (count === 2 || count === 4) {
+    return {
+      contentClass: 'max-w-[1120px] mx-auto',
+      gridClass: 'grid grid-cols-1 md:grid-cols-2 gap-4 max-w-[1120px] mx-auto',
+    };
+  }
+
+  return {
+    contentClass: 'max-w-[1440px] mx-auto',
+    gridClass: 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 max-w-[1440px] mx-auto',
+  };
+}
+
 function resultsReducer(state, action) {
   switch (action.type) {
     case 'SET_RESULT':
@@ -282,6 +303,8 @@ function DiagnosticExperience({ mode, partner, onBackHome }) {
   );
   const scanComplete = scanLabs.every((lab) => results[lab] !== null);
   const verifyComplete = verifyLabs.every((lab) => results[lab] !== null);
+  const scanLayout = getLabLayout(scanLabs.length);
+  const verifyLayout = getLabLayout(verifyLabs.length);
 
   if (step === 'preflight') {
     return <PreFlight brand={profile} onGranted={handlePermissionsGranted} />;
@@ -322,15 +345,15 @@ function DiagnosticExperience({ mode, partner, onBackHome }) {
         </div>
       </div>
 
-      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 pt-5">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12 pt-8 lg:pt-10">
         {step === 'scan' && (
-          <div className="space-y-4">
-            <div className="mb-6">
+          <div className="space-y-6">
+            <div className={scanLayout.contentClass}>
               <h1 className="text-xl font-bold text-slate-900">{profile.brandName} system scan</h1>
               <p className="text-sm text-slate-500 mt-1">Automatically detecting your device hardware for the selected version.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className={scanLayout.gridClass}>
               {scanLabs.includes('deviceContext') && <DeviceContext onResult={(r) => setResult('deviceContext', r)} />}
               {scanLabs.includes('cameras') && <CameraInventory onResult={(r) => setResult('cameras', r)} />}
               {scanLabs.includes('battery') && <BatteryLab onResult={(r) => setResult('battery', r)} />}
@@ -339,7 +362,7 @@ function DiagnosticExperience({ mode, partner, onBackHome }) {
             </div>
 
             {scanComplete && (
-              <div className="pt-4 animate-fade-in">
+              <div className="pt-2 animate-fade-in flex justify-center">
                 <button onClick={handleScanComplete} className="btn-primary md:w-auto md:px-10">
                   Continue to Verification →
                 </button>
@@ -349,13 +372,13 @@ function DiagnosticExperience({ mode, partner, onBackHome }) {
         )}
 
         {step === 'verify' && (
-          <div className="space-y-4">
-            <div className="mb-6">
+          <div className="space-y-6">
+            <div className={verifyLayout.contentClass}>
               <h1 className="text-xl font-bold text-slate-900">{profile.brandName} hardware verification</h1>
               <p className="text-sm text-slate-500 mt-1">Test each component to verify functionality for this version.</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className={verifyLayout.gridClass}>
               {verifyLabs.includes('audio') && <AudioSpectrum key={`audio-${resetKeys.audio}`} onResult={(r) => setResult('audio', r)} onRedo={() => handleRedo('audio')} />}
               {verifyLabs.includes('orientation') && <OrientationLab key={`orientation-${resetKeys.orientation}`} onResult={(r) => setResult('orientation', r)} onRedo={() => handleRedo('orientation')} />}
               {verifyLabs.includes('flashlight') && <FlashlightToggle key={`flashlight-${resetKeys.flashlight}`} onResult={(r) => setResult('flashlight', r)} onRedo={() => handleRedo('flashlight')} />}
@@ -365,7 +388,7 @@ function DiagnosticExperience({ mode, partner, onBackHome }) {
             </div>
 
             {verifyComplete && (
-              <div className="pt-4 animate-fade-in">
+              <div className="pt-2 animate-fade-in flex justify-center">
                 <button onClick={handleVerifyComplete} className="btn-primary md:w-auto md:px-10">
                   View Health Report →
                 </button>
@@ -378,7 +401,7 @@ function DiagnosticExperience({ mode, partner, onBackHome }) {
           <HealthCertificate
             results={results}
             onRestart={handleRestart}
-            footerText={profile.footerLabel}
+            footerLabel={profile.footerLabel}
             activeLabs={[...scanLabs, ...verifyLabs]}
           />
         )}
