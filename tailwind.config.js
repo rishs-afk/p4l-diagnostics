@@ -13,9 +13,9 @@ export default {
           'red-light': '#FF1A27',
         },
         charcoal: {
-          DEFAULT: '#F1F5F9',
-          light: '#CBD5E1',
-          muted: '#94A3B8',
+          DEFAULT: '#0F172A',
+          light: '#334155',
+          muted: '#64748B',
         },
         emerald: {
           pass: '#059669',
